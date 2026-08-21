@@ -26,6 +26,8 @@ numbers and schema remain materially misleading.
 - Replaced generic envelope lengths with semantic nested counts.
 - Preserved registry, state-variable and state-policy schema identifiers.
 - Verified exact parity against the authenticated live Control read model.
+- Validator approved the frozen exact head and performed protected delivery.
+- Rebuilt the live Twin from the merged commit and confirmed public projection parity.
 
 ## Blockers
 
