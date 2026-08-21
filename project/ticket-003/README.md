@@ -3,7 +3,7 @@
 - **ID**: ticket-003
 - **Owner**: unresolved:human
 - **Status**: IN_PROGRESS
-- **Workflow state**: EDIT
+- **Workflow state**: PUBLICATION
 - **Created**: 2026-08-21
 
 ## Goal and scope
@@ -15,13 +15,21 @@ request, log or infer a credential.
 
 ## Acceptance criteria
 
-- [ ] AC-01: Anonymous HTTP discovery retains public repository observations
+- [x] AC-01: Anonymous HTTP discovery retains public repository observations
   but reports source status `partial` with explicit public-only scope.
-- [ ] AC-02: Authenticated HTTP and successful authenticated `gh` discovery may
+- [x] AC-02: Authenticated HTTP and successful authenticated `gh` discovery may
   continue to report `healthy`.
-- [ ] AC-03: Empty anonymous results never claim a private organization is
+- [x] AC-03: Empty anonymous results never claim a private organization is
   completely observed.
-- [ ] AC-04: Unit, live container and governance checks pass before publication.
+- [x] AC-04: Unit, live container and governance checks pass before publication.
+
+## Validation evidence
+
+- Ten unit tests pass, including anonymous-empty and authenticated HTTP cases.
+- A hardened live container kept both required local sources healthy and marked
+  all five anonymous remote observations `partial/public-only`.
+- The anonymously empty Subactor remote result is no longer healthy; public
+  repositories remain available as bounded evidence.
 
 ## Participants
 

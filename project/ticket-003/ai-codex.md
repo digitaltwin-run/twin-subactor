@@ -24,6 +24,11 @@ evidence of complete organization visibility.
 
 - Initialized the bounded ticket and recorded SESSION_EXECUTION_AUTHORIZATION
   from the request to execute this work.
+- Added explicit `authenticated` versus `public-only` scope to successful remote
+  observation receipts.
+- Made anonymous HTTP success partial while retaining its observed repositories.
+- Verified the production container shape has zero healthy-empty anonymous
+  sources and does not require secret access for the diagnosis.
 
 ## Blockers
 
