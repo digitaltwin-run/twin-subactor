@@ -3,7 +3,7 @@
 - **ID**: ticket-008
 - **Owner**: unresolved:human
 - **Status**: IN_PROGRESS
-- **Workflow state**: VALIDATION
+- **Workflow state**: PUBLICATION
 - **Created**: 2026-08-21
 
 ## Goal and scope
@@ -19,7 +19,7 @@ distinct infrastructure/query roles.
   overridable workspace root.
 - [x] AC-02: Local and remote Twin discovery includes Autogrammar without
   granting it governance or mutation authority.
-- [ ] AC-03: Unit and governance checks pass.
+- [x] AC-03: Unit and governance checks pass.
 - [x] AC-04: Platform can mount the organization root separately under a
   follow-up Platform ticket.
 
@@ -29,6 +29,7 @@ distinct infrastructure/query roles.
 - An offline live snapshot observes 36 Autogrammar repositories with a healthy
   source receipt and digest
   `sha256:93de766f50cd0036adceb7e52b5a24455e170af9f35e58423a62acb38bee400a`.
+- Exact-base governance passes with zero errors and zero warnings.
 
 ## Authorization
 

@@ -3,7 +3,7 @@
 ## Active
 
 - [ ] `ticket-008` — add Autogrammar as a read-only grammar and DSL source.
-  Status: `IN_PROGRESS / VALIDATION`.
+  Status: `IN_PROGRESS / PUBLICATION`.
 - [x] `ticket-007` — deduplicate unreadable governance carrier diagnoses.
   Status: `DONE / DONE`.
 - [x] `ticket-006` — project semantic cardinalities and schemas from nested
