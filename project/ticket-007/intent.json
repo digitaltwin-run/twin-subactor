@@ -1,0 +1,67 @@
+{
+  "schema": "new-project.intent/v3",
+  "ticket": "ticket-007",
+  "summary": "Deduplicate unreadable governance carrier findings",
+  "workstream": "integration",
+  "classification": {
+    "kind": "BUG",
+    "priority": "P1",
+    "origin": "regression"
+  },
+  "allowedPaths": [
+    "src/twin_subactor/sources.py",
+    "src/twin_subactor/diagnosis.py",
+    "tests/test_twin.py",
+    "project/ticket-007/**",
+    "TODO.md",
+    "project/TICKETS.md"
+  ],
+  "forbiddenPaths": ["project/ticket-*/user-*.md"],
+  "stacks": [],
+  "dependsOn": [],
+  "conflictsWith": [],
+  "integrationTicket": null,
+  "delivery": {
+    "acceptedBaseSha": "0446244415541bb8c62402ad0db91172509d2c70",
+    "targetBranch": "main",
+    "outcome": "Represent unreadable SSOT carriers distinctly and emit one diagnosis for one governance-manifest permission failure",
+    "nonGoals": [
+      "Do not change observed file permissions",
+      "Do not mutate observed repositories",
+      "Do not suppress invalid readable content",
+      "Do not merge directly"
+    ],
+    "complexity": "S",
+    "estimatedMinutes": 15,
+    "budgets": {
+      "maxImplementationFiles": 3,
+      "maxAffectedComponents": 2,
+      "maxPublicInterfaceChanges": 1,
+      "maxRuntimeDependencies": 0
+    },
+    "architecture": {
+      "status": "accepted",
+      "decision": "Separate carrier read failures from content failures and let the governance-specific diagnosis own its manifest path",
+      "components": [
+        {"name": "source-adapter", "paths": ["src/twin_subactor/sources.py"]},
+        {"name": "diagnosis", "paths": ["src/twin_subactor/diagnosis.py", "tests/test_twin.py"]}
+      ],
+      "responsibilityChanges": false,
+      "interfaceChanges": ["SSOT carriers may report status unreadable"],
+      "dataChanges": [],
+      "ui": {"impact": "none", "states": [], "evidence": []},
+      "rollback": "Revert carrier status separation and deduplication tests"
+    },
+    "runtimeDependencies": [],
+    "validation": [
+      {
+        "criterion": "AC-05",
+        "commands": [
+          "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python -m unittest discover -s tests -v",
+          "./project/governance-check.sh --actor agent --base 0446244415541bb8c62402ad0db91172509d2c70 --head HEAD"
+        ],
+        "evidence": "project/ticket-007/ai-codex-logs.txt"
+      }
+    ]
+  }
+}
