@@ -47,6 +47,26 @@ class TwinTests(unittest.TestCase):
         self.assertTrue(observed["git"]["dirty"])
         self.assertTrue(observed["declarations"]["governance"])
 
+    def test_document_version_keeps_repository_and_extracts_semver(self) -> None:
+        repo = self.make_repo("document-version")
+        (repo / "VERSION").write_text(
+            "# Version\n\n## Current Version\n\n`0.12.0`\n\n" + "bounded release notes\n" * 20
+        )
+        org = {"id": "subactor", "role": "runtime", "ssotCarriers": ["VERSION"]}
+        observed = observe_local_repository(repo, org, 10)
+        self.assertEqual(observed["declarations"]["version"], "0.12.0")
+        self.assertEqual(observed["ssotCarriers"][0]["status"], "valid")
+        self.assertIn("git", observed)
+
+    def test_unparseable_document_version_degrades_only_version_field(self) -> None:
+        repo = self.make_repo("unparseable-version")
+        (repo / "VERSION").write_text("# Version\n\nNo release has been declared.\n" * 20)
+        org = {"id": "subactor", "role": "runtime", "ssotCarriers": ["VERSION"]}
+        observed = observe_local_repository(repo, org, 10)
+        self.assertIsNone(observed["declarations"]["version"])
+        self.assertEqual(observed["ssotCarriers"][0]["status"], "valid")
+        self.assertIn("git", observed)
+
     def test_discovery_marks_missing_required_root_unavailable(self) -> None:
         config = {
             "maxRepositories": 10,
