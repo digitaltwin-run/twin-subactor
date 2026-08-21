@@ -3,7 +3,7 @@
 ## Active
 
 - [ ] `ticket-007` — deduplicate unreadable governance carrier diagnoses.
-  Status: `IN_PROGRESS / EDIT`.
+  Status: `IN_PROGRESS / PUBLICATION`.
 - [x] `ticket-006` — project semantic cardinalities and schemas from nested
   Control registry envelopes. Status: `DONE / DONE`.
 - [x] `ticket-005` — distinguish unreadable governance carriers from absent

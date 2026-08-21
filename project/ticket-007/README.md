@@ -3,7 +3,7 @@
 - **ID**: ticket-007
 - **Owner**: unresolved:human
 - **Status**: IN_PROGRESS
-- **Workflow state**: EDIT
+- **Workflow state**: PUBLICATION
 - **Created**: 2026-08-21
 
 ## Goal and scope
@@ -20,12 +20,23 @@ failed bounded parsing.
 
 ## Acceptance criteria
 
-- [ ] AC-01: Permission errors produce carrier status `unreadable`, not `invalid`.
-- [ ] AC-02: An unreadable governance manifest produces exactly one finding.
-- [ ] AC-03: A distinct unreadable SSOT carrier produces a stable Doctor finding.
-- [ ] AC-04: Invalid readable content remains `TWIN-SSOT-INVALID`.
-- [ ] AC-05: Unit, governance and hardened live deduplication checks pass.
+- [x] AC-01: Permission errors produce carrier status `unreadable`, not `invalid`.
+- [x] AC-02: An unreadable governance manifest produces exactly one finding.
+- [x] AC-03: A distinct unreadable SSOT carrier produces a stable Doctor finding.
+- [x] AC-04: Invalid readable content remains `TWIN-SSOT-INVALID`.
+- [x] AC-05: Unit, governance and hardened live deduplication checks pass.
 - [ ] AC-06: Exact-head Validator performs protected publication.
+
+## Validation evidence
+
+- 19 unit tests pass, including governance-path deduplication, a distinct
+  unreadable SSOT carrier and invalid readable JSON.
+- Exact-base governance reports zero errors and zero warnings.
+- A non-root, read-only, capability-free image scanned the live organization
+  roots: 20 governance-unreadable findings, zero SSOT-invalid findings, zero
+  generic SSOT-unreadable findings for the owned manifest paths and zero target
+  intersections. Finding total fell from the duplicate-inflated shape without
+  changing observed files.
 
 ## Authorization
 

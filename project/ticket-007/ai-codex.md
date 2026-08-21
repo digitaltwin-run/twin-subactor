@@ -24,6 +24,10 @@ twice and can distort priority ordering.
 
 - Initialized the bounded ticket and recorded SESSION_EXECUTION_AUTHORIZATION
   from the request to execute this work.
+- Separated carrier read failures from content-validation failures.
+- Let the governance-specific diagnosis own its manifest path.
+- Preserved a generic Doctor route for other unreadable SSOT carriers.
+- Proved zero duplicate targets in the hardened live scan.
 
 ## Blockers
 

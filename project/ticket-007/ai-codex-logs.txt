@@ -1,2 +1,4 @@
 2026-08-21T09:49:00Z ticket allocated through project/new-ticket.sh at integrated base 0446244415541bb8c62402ad0db91172509d2c70.
 2026-08-21T09:49:00Z live set comparison: 20 TWIN-GOVERNANCE-UNREADABLE targets and 20 TWIN-SSOT-INVALID targets; intersection=20, proving duplicate classification of identical permission failures.
+2026-08-21T09:51:00Z regression suite: 19/19 tests pass; exact-base governance: GOV-PASS with zero errors and zero warnings.
+2026-08-21T09:51:00Z hardened image sha256:385153530c2bf14e0a6e953b4bec01ff8539d5b9e833bb85a61ec075f93c5521: governance-unreadable=20, SSOT-invalid=0, SSOT-unreadable=0 for governed manifest targets, intersections=0, total findings=141 offline.
