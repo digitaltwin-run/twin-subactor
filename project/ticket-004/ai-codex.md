@@ -26,6 +26,7 @@ runner is cleaned.
 - Added deterministic missing, untracked, unwired and fail-open diagnoses.
 - Excluded the Wellmanifest standard source from adopter-only findings.
 - Verified the detector against unit fixtures and the three live pilots.
+- Validator approved the frozen exact head and performed protected delivery.
 
 ## Blockers
 
