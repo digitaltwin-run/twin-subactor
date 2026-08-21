@@ -2,8 +2,8 @@
 
 - **ID**: ticket-004
 - **Owner**: unresolved:human
-- **Status**: IN_PROGRESS
-- **Workflow state**: VALIDATION
+- **Status**: DONE
+- **Workflow state**: DONE
 - **Created**: 2026-08-21
 
 ## Goal and scope
@@ -34,6 +34,15 @@ install governance files or grant Repair authority.
 - Live local observation reports `core` and `platform` healthy and classifies
   `www-sub-actor` as `TWIN-WORKTREE-GUARD-NOT-WIRED`; because that checkout is
   dirty, the finding routes to human rather than inventing repair authority.
+
+## Publication evidence
+
+- Pull request: `subactor/twin-subactor#7`
+- Frozen and approved head: `2066bb37ff248228cacfdcc06d8dd01f5ae4c2f7`
+- Validator run: `32465104375`
+- Validator review: `4991524777`
+- Merge commit: `13b3630ce4e693f6df3f09b96badae39b1ab070b`
+  (merged `2026-08-21T08:53:05Z`)
 
 ## Authorization
 
