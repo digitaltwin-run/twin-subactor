@@ -1,0 +1,68 @@
+{
+  "schema": "new-project.intent/v3",
+  "ticket": "ticket-004",
+  "summary": "Detect fail-open worktree guard drift",
+  "workstream": "integration",
+  "classification": {
+    "kind": "BUG",
+    "priority": "P1",
+    "origin": "regression"
+  },
+  "allowedPaths": [
+    "project/ticket-004/**",
+    "TODO.md",
+    "project/TICKETS.md",
+    "src/twin_subactor/sources.py",
+    "src/twin_subactor/diagnosis.py",
+    "tests/test_twin.py"
+  ],
+  "forbiddenPaths": ["project/ticket-*/user-*.md"],
+  "stacks": [],
+  "dependsOn": [],
+  "conflictsWith": [],
+  "integrationTicket": null,
+  "delivery": {
+    "acceptedBaseSha": "c87ba6ba779f3a78ea788eca9aafc187ef7c2a2a",
+    "targetBranch": "main",
+    "outcome": "Classify recurring fail-open worktree guard drift from bounded local evidence and route it through Doctor without mutating observed repositories",
+    "nonGoals": [
+      "Do not execute repository hooks",
+      "Do not install or remove guard files",
+      "Do not infer mutation authority",
+      "Do not read secrets or stash state",
+      "Do not merge directly"
+    ],
+    "complexity": "S",
+    "estimatedMinutes": 20,
+    "budgets": {
+      "maxImplementationFiles": 3,
+      "maxAffectedComponents": 2,
+      "maxPublicInterfaceChanges": 1,
+      "maxRuntimeDependencies": 0
+    },
+    "architecture": {
+      "status": "accepted",
+      "decision": "Add a bounded governanceGuard projection to local repository observation and deterministic exact error codes for missing, untracked, unwired and fail-open states",
+      "components": [
+        {"name": "source-adapter", "paths": ["src/twin_subactor/sources.py"]},
+        {"name": "doctor-diagnosis", "paths": ["src/twin_subactor/diagnosis.py", "tests/test_twin.py"]}
+      ],
+      "responsibilityChanges": false,
+      "interfaceChanges": ["local repository projections may include governanceGuard"],
+      "dataChanges": [],
+      "ui": {"impact": "none", "states": [], "evidence": []},
+      "rollback": "Revert the governanceGuard projection, diagnoses and regression tests"
+    },
+    "runtimeDependencies": [],
+    "validation": [
+      {
+        "criterion": "AC-04",
+        "commands": [
+          "python -m unittest discover -s tests -v",
+          "./project/governance-check.sh --actor agent --base c87ba6ba779f3a78ea788eca9aafc187ef7c2a2a --head HEAD"
+        ],
+        "evidence": "project/ticket-004/ai-codex-logs.txt"
+      }
+    ]
+  }
+}
