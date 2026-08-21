@@ -4,3 +4,4 @@
 2026-08-21T09:27:00Z initial exact-base governance rejected incomplete delivery metadata and unknown workstream; corrected to the bounded S/integration contract without bypass.
 2026-08-21T09:29:00Z exact-base governance: GOV-PASS with zero errors and zero warnings.
 2026-08-21T09:30:00Z hardened image sha256:99c5d55389bd44cdb8fd89fc03bd028cdc2b174b36b58a00e56c92e154b90fff scanned live roots as uid 10001, read-only, cap-drop=ALL; 20 PermissionError manifests routed as TWIN-GOVERNANCE-UNREADABLE and not TWIN-GOVERNANCE-MISSING.
+2026-08-21T09:32:30Z Validator run 32468220581 approved exact head 0ae1d975ad9aa5a40722e632225aa6f5e157ba98 as review 4991880927; protected merge d91941018d32239aa87f39546f0f1bd44d0c4d13 completed.

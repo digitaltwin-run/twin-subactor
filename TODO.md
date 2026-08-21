@@ -2,8 +2,8 @@
 
 ## Active
 
-- [ ] `ticket-005` — distinguish unreadable governance carriers from absent
-  governance adoption. Status: `IN_PROGRESS / PUBLICATION`.
+- [x] `ticket-005` — distinguish unreadable governance carriers from absent
+  governance adoption. Status: `DONE / DONE`.
 - [x] `ticket-001` — build the read-only Subactor ecosystem twin and its
   digest-bound next-action projection. Status: `DONE / DONE`.
 - [x] `ticket-002` — tolerate bounded document-shaped VERSION carriers without
