@@ -25,6 +25,7 @@ observation failure, not evidence that governance was never adopted.
 - Added explicit absent, valid, invalid and unreadable governance-carrier states.
 - Routed unreadable and invalid carriers to Doctor without mutation authority.
 - Proved the classification with deterministic fixtures and the hardened live image.
+- Validator approved the frozen exact head and performed protected delivery.
 
 ## Blockers
 

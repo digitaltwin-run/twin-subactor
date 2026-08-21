@@ -2,8 +2,8 @@
 
 - **ID**: ticket-005
 - **Owner**: unresolved:human
-- **Status**: IN_PROGRESS
-- **Workflow state**: PUBLICATION
+- **Status**: DONE
+- **Workflow state**: DONE
 - **Created**: 2026-08-21
 
 ## Goal and scope
@@ -20,7 +20,7 @@ that governance is missing.
       never produces `TWIN-GOVERNANCE-MISSING`.
 - [x] AC-03: A readable valid manifest preserves the current projection.
 - [x] AC-04: Unit tests, governance and a live hardened-container check pass.
-- [ ] AC-05: Publication uses exact-head Validator approval and protected merge.
+- [x] AC-05: Publication uses exact-head Validator approval and protected merge.
 
 ## Validation evidence
 
@@ -30,6 +30,20 @@ that governance is missing.
   roots and classified 20 permission-denied manifests as
   `TWIN-GOVERNANCE-UNREADABLE`, routed to Doctor. Those repositories no longer
   produce the false `TWIN-GOVERNANCE-MISSING` diagnosis.
+
+## Publication evidence
+
+- Pull request: `subactor/twin-subactor#9`.
+- Frozen and approved head: `0ae1d975ad9aa5a40722e632225aa6f5e157ba98`.
+- Hosted CI and governance run: `32467889193` and `32467889179`.
+- Validator run: `32468220581`; review: `4991880927`.
+- Merge commit: `d91941018d32239aa87f39546f0f1bd44d0c4d13`;
+  merged `2026-08-21T09:32:30Z`.
+
+## Closure boundary
+
+This governance-only closure records the integrated result. It changes no Twin
+runtime, source registry, observed repository or authority boundary.
 
 ## Authorization
 
