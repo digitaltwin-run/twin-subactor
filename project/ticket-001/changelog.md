@@ -8,3 +8,4 @@
   with Doctor, Repair, Validator and Control authority kept external.
 - Implemented and validated the multi-organization snapshot, diagnosis,
   next-action, CLI, HTTP, CI and container surfaces.
+- Recorded protected exact-head publication and governance-only closure.
