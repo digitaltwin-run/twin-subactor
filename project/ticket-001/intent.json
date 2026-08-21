@@ -16,7 +16,6 @@
     "README.md",
     "TODO.md",
     "VERSION",
-    "compose.yml",
     "config/**",
     "docs/**",
     "project/ticket-001/**",
@@ -48,6 +47,7 @@
     ]
   },
   "delivery": {
+    "acceptedBaseSha": "04fbe7a15a4ab8d42b7efb500f64cb91a4db3846",
     "targetBranch": "main",
     "outcome": "Publish a private, read-only ecosystem Digital Twin that discovers all configured repositories, projects source health and emits digest-bound next-action candidates without acquiring execution authority.",
     "nonGoals": [
@@ -58,12 +58,12 @@
       "No semantic ownership inferred from repository name alone"
     ],
     "complexity": "L",
-    "estimatedMinutes": 180,
+    "estimatedMinutes": 30,
     "budgets": {
       "maxImplementationFiles": 15,
       "maxAffectedComponents": 5,
       "maxPublicInterfaceChanges": 3,
-      "maxRuntimeDependencies": 0
+      "maxRuntimeDependencies": 1
     },
     "architecture": {
       "status": "accepted",
@@ -73,7 +73,7 @@
         {"name": "ecosystem-projection", "paths": ["schemas/**", "src/twin_subactor/model.py"]},
         {"name": "decision-support", "paths": ["src/twin_subactor/diagnosis.py"]},
         {"name": "read-only-adapters", "paths": ["src/twin_subactor/cli.py", "src/twin_subactor/service.py"]},
-        {"name": "delivery", "paths": ["Dockerfile", "compose.yml", "tests/**", "docs/**"]}
+        {"name": "delivery", "paths": ["Dockerfile", ".github/**", "CHANGELOG.md", "README.md", "pyproject.toml", "src/twin_subactor/__init__.py", "tests/**", "docs/**"]}
       ],
       "responsibilityChanges": false,
       "interfaceChanges": [
@@ -85,10 +85,10 @@
       "ui": {"impact": "none", "states": [], "evidence": []},
       "rollback": "Remove the service registration and repository; no external system state is owned by the Twin"
     },
-    "runtimeDependencies": [],
+    "runtimeDependencies": ["git"],
     "validation": [
-      {"criterion": "AC-01..AC-04", "commands": ["python -m unittest discover -s tests -v"], "evidence": "Deterministic discovery, freshness, deduplication and handoff tests pass"},
-      {"criterion": "AC-05", "commands": ["docker compose config", "docker build ."], "evidence": "Read-only non-root runtime profile builds"},
+      {"criterion": "AC-01", "commands": ["python -m unittest discover -s tests -v"], "evidence": "Deterministic discovery, freshness, deduplication and handoff tests pass"},
+      {"criterion": "AC-05", "commands": ["docker build .", "docker run --read-only --user 10001:10001 --cap-drop ALL --security-opt no-new-privileges <image> --offline snapshot"], "evidence": "Read-only non-root runtime profile builds and scans mounted sources"},
       {"criterion": "AC-06", "commands": ["./project/governance-check.sh --actor agent --base <acceptedBaseSha> --head HEAD"], "evidence": "Governance and stack checks pass on the exact head"}
     ]
   }

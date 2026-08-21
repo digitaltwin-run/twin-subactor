@@ -3,7 +3,7 @@
 - **ID**: ticket-001
 - **Owner**: unresolved:human
 - **Status**: IN_PROGRESS
-- **Workflow state**: EDIT
+- **Workflow state**: PUBLICATION
 - **Created**: 2026-08-21
 
 ## Goal and scope
@@ -21,17 +21,17 @@ handoff is bound to the snapshot and finding digests.
 
 ## Acceptance criteria
 
-- [ ] AC-01: Local and GitHub organization discovery represents every observed
+- [x] AC-01: Local and GitHub organization discovery represents every observed
   repository with provenance, freshness and source-health state.
-- [ ] AC-02: The snapshot consumes only declared SSOT carriers and bounded
+- [x] AC-02: The snapshot consumes only declared SSOT carriers and bounded
   Control read models; unavailable inputs are `unknown`, never healthy.
-- [ ] AC-03: Deterministic rules emit deduplicated, prioritized next-action
+- [x] AC-03: Deterministic rules emit deduplicated, prioritized next-action
   candidates bound to snapshot and finding digests.
-- [ ] AC-04: Repairable candidates express `doctor → repair → validator`
+- [x] AC-04: Repairable candidates express `doctor → repair → validator`
   handoffs without embedding authority or executing effects.
-- [ ] AC-05: A read-only CLI and HTTP service expose snapshot, diagnosis and
+- [x] AC-05: A read-only CLI and HTTP service expose snapshot, diagnosis and
   next-action projections and run in a non-root, read-only container.
-- [ ] AC-06: Unit, governance, container and live read-only smoke tests pass.
+- [x] AC-06: Unit, governance, container and live read-only smoke tests pass.
 - [ ] AC-07: Publication uses exact-head Validator approval and protected merge.
 
 ## Participants

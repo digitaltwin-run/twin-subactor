@@ -2,3 +2,9 @@
 [2026-08-21T07:12:00Z] SEED PROFILE: 49 resolved carrier paths; sorted-path digest sha256:21b9037d1754e11673c58a6f85fbf7a7ba09de55108a29122ba9ab22345a2829.
 [2026-08-21T07:12:00Z] SECRET SCAN: no credential-shaped value found; matches were scanner source definitions only.
 [2026-08-21T07:12:00Z] ADOPTION: immutable lock check PASS; remote effects before seed commit: none.
+[2026-08-21T07:14:00Z] SEED COMMIT: 04fbe7a15a4ab8d42b7efb500f64cb91a4db3846; recorded as delivery.acceptedBaseSha before implementation.
+[2026-08-21T07:15:00Z] REMOTE: created private subactor/twin-subactor and published only the governed seed baseline to establish main for protected PR delivery.
+[2026-08-21T07:31:00Z] UNIT: 6 tests PASS; deterministic snapshot digest excludes capture time and binds semantic content.
+[2026-08-21T07:33:00Z] LIVE READ: GitHub 72 subactor, 40 wellmanifest, 4 uri-twin, 56 semcod, 21 oqlos; 195 unique merged repositories. Control unavailable without secret access and remained fail-closed.
+[2026-08-21T07:36:00Z] SCHEMA/SERVICE: Draft 2020-12 validation PASS; /health acts=false; /v1/next-actions returns digest-bound authority boundary.
+[2026-08-21T07:38:00Z] CONTAINER: pinned Python base built; non-root read-only scan observed all five mounted organization roots without a writable workspace.

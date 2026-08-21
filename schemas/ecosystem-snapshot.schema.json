@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://subactor.com/schemas/ecosystem-twin-snapshot.v1.json",
+  "title": "Subactor ecosystem Digital Twin snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "capturedAt", "snapshotDigest", "sources", "repositories", "control", "findings", "nextActions"],
+  "properties": {
+    "schema": {"const": "subactor.ecosystem-twin.snapshot/v1"},
+    "capturedAt": {"type": "string", "format": "date-time"},
+    "snapshotDigest": {"$ref": "#/$defs/digest"},
+    "sources": {"type": "array", "items": {"$ref": "#/$defs/source"}},
+    "repositories": {"type": "array", "items": {"type": "object"}},
+    "control": {"type": "object"},
+    "findings": {"type": "array", "items": {"$ref": "#/$defs/finding"}},
+    "nextActions": {"type": "array", "items": {"$ref": "#/$defs/action"}}
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "source": {
+      "type": "object",
+      "required": ["id", "kind", "required", "status"],
+      "properties": {
+        "id": {"type": "string"},
+        "kind": {"enum": ["organization-local", "organization-remote", "control-read-model"]},
+        "required": {"type": "boolean"},
+        "status": {"enum": ["healthy", "partial", "unavailable", "disabled"]}
+      }
+    },
+    "finding": {
+      "type": "object",
+      "required": ["code", "severity", "target", "findingDigest", "deduplicationKey", "repairability"],
+      "properties": {
+        "findingDigest": {"$ref": "#/$defs/digest"},
+        "deduplicationKey": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "action": {
+      "type": "object",
+      "required": ["id", "snapshotDigest", "findingDigest", "priority", "route", "pipeline", "authority"],
+      "properties": {
+        "snapshotDigest": {"$ref": "#/$defs/digest"},
+        "findingDigest": {"$ref": "#/$defs/digest"},
+        "authority": {"const": "external-digest-bound-grant-required-for-mutation"}
+      }
+    }
+  }
+}
