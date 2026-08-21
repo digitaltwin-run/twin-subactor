@@ -145,6 +145,61 @@ def diagnose(snapshot: dict[str, Any], config: dict[str, Any]) -> list[dict[str,
                 )
             )
 
+        guard = repo.get("governanceGuard", {})
+        if guard.get("declared"):
+            repairability = "grant-required" if not git.get("dirty") else "human-decision-required"
+            route = "repair-agent" if not git.get("dirty") else "human"
+            if guard.get("missingManagedTargets"):
+                findings.append(
+                    _finding(
+                        "TWIN-WORKTREE-GUARD-RUNNER-MISSING",
+                        "critical",
+                        f"repo:{repo['id']}",
+                        {"missingManagedTargets": guard["missingManagedTargets"]},
+                        repairability=repairability,
+                        route=route,
+                    )
+                )
+            if guard.get("untrackedManagedTargets"):
+                findings.append(
+                    _finding(
+                        "TWIN-WORKTREE-GUARD-UNTRACKED",
+                        "error",
+                        f"repo:{repo['id']}",
+                        {"untrackedManagedTargets": guard["untrackedManagedTargets"]},
+                        repairability=repairability,
+                        route=route,
+                    )
+                )
+            if not all((guard.get("hookPath"), guard.get("hookPathBounded"), guard.get("hookEntryPresent"), guard.get("hookFragmentPresent"), guard.get("hookWired"))):
+                findings.append(
+                    _finding(
+                        "TWIN-WORKTREE-GUARD-NOT-WIRED",
+                        "error",
+                        f"repo:{repo['id']}",
+                        {
+                            "hookConfigured": bool(guard.get("hookPath")),
+                            "hookPathBounded": guard.get("hookPathBounded", False),
+                            "hookEntryPresent": guard.get("hookEntryPresent", False),
+                            "hookFragmentPresent": guard.get("hookFragmentPresent", False),
+                            "hookWired": guard.get("hookWired", False),
+                        },
+                        repairability=repairability,
+                        route=route,
+                    )
+                )
+            elif not guard.get("failClosedWithoutRunner"):
+                findings.append(
+                    _finding(
+                        "TWIN-WORKTREE-GUARD-FAIL-OPEN",
+                        "critical",
+                        f"repo:{repo['id']}",
+                        {"hookFragmentPresent": True, "failClosedWithoutRunner": False},
+                        repairability=repairability,
+                        route=route,
+                    )
+                )
+
     context = snapshot.get("control", {}).get("system-context", {})
     if context and context.get("servicesCount") == 0:
         findings.append(

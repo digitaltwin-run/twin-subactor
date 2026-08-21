@@ -17,6 +17,11 @@ WORKFLOW_RE = re.compile(r"^- \*\*Workflow state\*\*:\s*([A-Z_]+)\s*$", re.MULTI
 SEMANTIC_VERSION_RE = re.compile(
     r"(?<![0-9A-Za-z.-])(v?\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?)(?![0-9A-Za-z.-])"
 )
+GUARD_MANAGED_TARGETS = (
+    ".governance/worktree_guard.py",
+    ".governance/worktree_overlap_check.py",
+    "worktree-guard.yaml",
+)
 
 
 def canonical_bytes(value: Any) -> bytes:
@@ -106,6 +111,97 @@ def _declared_version(path: Path) -> str | None:
     return match.group(1) if match else None
 
 
+def _tracked(repo: Path, relative: str) -> bool:
+    return bool(_git(repo, "ls-files", "--error-unmatch", "--", relative, check=False))
+
+
+def _guard_package_targets(repo: Path) -> set[str]:
+    path = repo / ".governance/package-manifest.json"
+    if not path.is_file():
+        return set()
+    try:
+        document = json.loads(_read_bytes(path, 131_072))
+    except (OSError, ValueError, json.JSONDecodeError):
+        return set()
+    files = document.get("files", []) if isinstance(document, dict) else []
+    return {
+        item["target"]
+        for item in files
+        if isinstance(item, dict) and isinstance(item.get("target"), str)
+    }
+
+
+def _bounded_text(path: Path) -> str:
+    if not path.is_file():
+        return ""
+    try:
+        return _read_bytes(path, 65_536).decode("utf-8", "replace")
+    except (OSError, ValueError):
+        return ""
+
+
+def _guard_hook_root(repo: Path, hook_path: str) -> Path | None:
+    candidate = Path(hook_path)
+    resolved = candidate.resolve() if candidate.is_absolute() else (repo / candidate).resolve()
+    try:
+        resolved.relative_to(repo.resolve())
+    except ValueError:
+        return None
+    return resolved
+
+
+def _worktree_guard(repo: Path) -> dict[str, Any]:
+    package_targets = _guard_package_targets(repo)
+    declared_targets = sorted(package_targets.intersection(GUARD_MANAGED_TARGETS))
+    adoption_manifest = (repo / ".governance/package-manifest.json").is_file()
+    declared = bool(
+        declared_targets
+        or (adoption_manifest and (repo / "worktree-guard.yaml").is_file())
+        or (repo / ".governance/worktree_guard.py").is_file()
+        or (repo / ".githooks/pre-commit-worktree-guard").is_file()
+        or (repo / "githooks/pre-commit-worktree-guard").is_file()
+    )
+    if not declared:
+        return {"declared": False, "status": "not-declared"}
+
+    expected_targets = declared_targets or list(GUARD_MANAGED_TARGETS)
+    missing_targets = [target for target in expected_targets if not (repo / target).is_file()]
+    untracked_targets = [
+        target for target in expected_targets
+        if (repo / target).is_file() and not _tracked(repo, target)
+    ]
+    hook_path = _git(repo, "config", "--path", "core.hooksPath", check=False) or None
+    hook_root = _guard_hook_root(repo, hook_path) if hook_path else None
+    hook_entry = hook_root / "pre-commit" if hook_root else None
+    hook_fragment = hook_root / "pre-commit-worktree-guard" if hook_root else None
+    entry_text = _bounded_text(hook_entry) if hook_entry else ""
+    fragment_text = _bounded_text(hook_fragment) if hook_fragment else ""
+    hook_entry_present = bool(hook_entry and hook_entry.is_file())
+    hook_fragment_present = bool(hook_fragment and hook_fragment.is_file())
+    hook_wired = hook_entry_present and "pre-commit-worktree-guard" in entry_text
+    fail_closed = bool(
+        hook_fragment_present
+        and "worktree_guard.py is missing" in fragment_text
+        and re.search(r"(?m)^exit\s+1\s*$", fragment_text)
+    )
+    healthy = not any((missing_targets, untracked_targets)) and all(
+        (hook_path, hook_root, hook_entry_present, hook_fragment_present, hook_wired, fail_closed)
+    )
+    return {
+        "declared": True,
+        "status": "healthy" if healthy else "degraded",
+        "managedTargets": expected_targets,
+        "missingManagedTargets": missing_targets,
+        "untrackedManagedTargets": untracked_targets,
+        "hookPath": hook_path,
+        "hookPathBounded": hook_root is not None,
+        "hookEntryPresent": hook_entry_present,
+        "hookFragmentPresent": hook_fragment_present,
+        "hookWired": hook_wired,
+        "failClosedWithoutRunner": fail_closed,
+    }
+
+
 def observe_local_repository(repo: Path, org: dict[str, Any], max_tickets: int) -> dict[str, Any]:
     origin = _git(repo, "remote", "get-url", "origin", check=False)
     full_name = _origin_full_name(origin) or f"{org['id']}/{repo.name}"
@@ -160,6 +256,7 @@ def observe_local_repository(repo: Path, org: dict[str, Any], max_tickets: int) 
             "stacks": manifest.get("stacks", []),
             "repository": manifest.get("repository"),
         },
+        "governanceGuard": _worktree_guard(repo),
         "ssotCarriers": carriers,
         "tickets": _ticket_summary(repo, max_tickets),
     }
