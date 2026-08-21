@@ -1,0 +1,15 @@
+2026-08-21T08:04:00Z deployed-diagnosis
+OBSERVED=remote subactor status healthy repositoryCount=0 without TWIN_SUBACTOR_GITHUB_TOKEN
+AUTHENTICATED_HOST_REFERENCE=72 repositories
+CAUSE=successful anonymous HTTP response was treated as complete organization visibility
+SECRET_ACCESS=none
+
+2026-08-21T08:05:00Z focused-validation
+$ PYTHONPATH=src python3 -m unittest discover -s tests -v
+PASS: 10 tests, 10 passed, 0 failed.
+$ docker run <hardened ticket-003 image> snapshot
+PASS: required local subactor/wellmanifest healthy; all five anonymous remote
+sources partial/public-only; healthy empty remote sources=0; repositories=173.
+
+2026-08-21T08:05:30Z publication-state
+WORKFLOW=IN_PROGRESS/PUBLICATION

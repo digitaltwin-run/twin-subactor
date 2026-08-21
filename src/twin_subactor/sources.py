@@ -272,7 +272,9 @@ def discover_remote(config: dict[str, Any], offline: bool) -> tuple[list[dict[st
             receipts.append(receipt)
             continue
         try:
-            items = _remote_repositories_with_gh(org["id"]) if shutil.which("gh") else _remote_repositories_with_http(org["id"])
+            uses_gh = bool(shutil.which("gh"))
+            authenticated_http = bool(os.environ.get("GITHUB_TOKEN", "").strip())
+            items = _remote_repositories_with_gh(org["id"]) if uses_gh else _remote_repositories_with_http(org["id"])
             for item in items[: int(config["maxRepositories"])]:
                 repositories.append(
                     {
@@ -290,7 +292,13 @@ def discover_remote(config: dict[str, Any], offline: bool) -> tuple[list[dict[st
                         },
                     }
                 )
-            receipt.update(status="healthy", repositoryCount=len(items), truncated=len(items) > int(config["maxRepositories"]))
+            public_only = not uses_gh and not authenticated_http
+            receipt.update(
+                status="partial" if public_only else "healthy",
+                scope="public-only" if public_only else "authenticated",
+                repositoryCount=len(items),
+                truncated=len(items) > int(config["maxRepositories"]),
+            )
         except (OSError, RuntimeError, ValueError, json.JSONDecodeError, urllib.error.URLError):
             receipt.update(status="unavailable", error="remote-observation-failed", repositoryCount=0)
         receipts.append(receipt)

@@ -10,7 +10,7 @@ from unittest import mock
 
 from twin_subactor.diagnosis import diagnose, next_actions
 from twin_subactor.model import _merge_repositories, build_snapshot
-from twin_subactor.sources import digest, discover_local, load_config, observe_local_repository
+from twin_subactor.sources import digest, discover_local, discover_remote, load_config, observe_local_repository
 
 
 class TwinTests(unittest.TestCase):
@@ -79,6 +79,37 @@ class TwinTests(unittest.TestCase):
             sources, repositories = discover_local(config, self.root)
         self.assertEqual(sources[0]["status"], "unavailable")
         self.assertEqual(repositories, [])
+
+    def test_anonymous_remote_discovery_is_partial_public_only(self) -> None:
+        config = {
+            "maxRepositories": 10,
+            "organizations": [{"id": "subactor", "required": True, "role": "runtime"}],
+        }
+        with (
+            mock.patch("twin_subactor.sources.shutil.which", return_value=None),
+            mock.patch("twin_subactor.sources._remote_repositories_with_http", return_value=[]),
+            mock.patch.dict(os.environ, {}, clear=True),
+        ):
+            sources, repositories = discover_remote(config, offline=False)
+        self.assertEqual(sources[0]["status"], "partial")
+        self.assertEqual(sources[0]["scope"], "public-only")
+        self.assertEqual(repositories, [])
+
+    def test_authenticated_http_discovery_can_be_healthy(self) -> None:
+        config = {
+            "maxRepositories": 10,
+            "organizations": [{"id": "subactor", "required": True, "role": "runtime"}],
+        }
+        item = {"full_name": "subactor/private", "archived": False, "private": True, "default_branch": "main"}
+        with (
+            mock.patch("twin_subactor.sources.shutil.which", return_value=None),
+            mock.patch("twin_subactor.sources._remote_repositories_with_http", return_value=[item]),
+            mock.patch.dict(os.environ, {"GITHUB_TOKEN": "test-only-placeholder"}, clear=True),
+        ):
+            sources, repositories = discover_remote(config, offline=False)
+        self.assertEqual(sources[0]["status"], "healthy")
+        self.assertEqual(sources[0]["scope"], "authenticated")
+        self.assertEqual(repositories[0]["id"], "subactor/private")
 
     def test_findings_are_deduplicated_and_handoffs_require_authority(self) -> None:
         snapshot = {
