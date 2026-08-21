@@ -76,7 +76,37 @@ def diagnose(snapshot: dict[str, Any], config: dict[str, Any]) -> list[dict[str,
         declarations = repo.get("declarations", {})
         git = repo.get("git", {})
         governance_expected = organizations.get(repo.get("organization"), {}).get("governanceExpected", False)
-        if governance_expected and not declarations.get("governance"):
+        governance_carrier = declarations.get("governanceCarrier", {})
+        governance_status = governance_carrier.get("status")
+        if governance_expected and governance_status == "unreadable":
+            findings.append(
+                _finding(
+                    "TWIN-GOVERNANCE-UNREADABLE",
+                    "error",
+                    f"repo:{repo['id']}",
+                    {
+                        "path": governance_carrier.get("path"),
+                        "error": governance_carrier.get("error"),
+                    },
+                    repairability="diagnosis-required",
+                    route="doctor-agent",
+                )
+            )
+        elif governance_expected and governance_status == "invalid":
+            findings.append(
+                _finding(
+                    "TWIN-GOVERNANCE-INVALID",
+                    "error",
+                    f"repo:{repo['id']}",
+                    {
+                        "path": governance_carrier.get("path"),
+                        "error": governance_carrier.get("error"),
+                    },
+                    repairability="diagnosis-required",
+                    route="doctor-agent",
+                )
+            )
+        elif governance_expected and not declarations.get("governance"):
             findings.append(
                 _finding(
                     "TWIN-GOVERNANCE-MISSING",

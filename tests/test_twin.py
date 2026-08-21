@@ -65,6 +65,57 @@ class TwinTests(unittest.TestCase):
         self.assertEqual(observed["declaredRole"], "declared-test-role")
         self.assertTrue(observed["git"]["dirty"])
         self.assertTrue(observed["declarations"]["governance"])
+        self.assertEqual(observed["declarations"]["governanceCarrier"]["status"], "valid")
+
+    def test_unreadable_governance_is_not_reported_as_missing(self) -> None:
+        repo = self.make_repo("unreadable-governance")
+        org = {"id": "subactor", "role": "runtime", "ssotCarriers": []}
+        original_read = __import__("twin_subactor.sources", fromlist=["_read_bytes"])._read_bytes
+
+        def deny_manifest(path: Path, limit: int = 1_048_576) -> bytes:
+            if path == repo / ".governance/manifest.json":
+                raise PermissionError("fixture denies the hardened reader")
+            return original_read(path, limit)
+
+        with mock.patch("twin_subactor.sources._read_bytes", side_effect=deny_manifest):
+            observed = observe_local_repository(repo, org, 10)
+
+        carrier = observed["declarations"]["governanceCarrier"]
+        self.assertEqual(carrier, {
+            "path": ".governance/manifest.json",
+            "status": "unreadable",
+            "error": "PermissionError",
+        })
+        config = {"organizations": [{"id": "subactor", "governanceExpected": True}]}
+        findings = diagnose({"sources": [], "repositories": [observed], "control": {}}, config)
+        codes = [item["code"] for item in findings]
+        self.assertIn("TWIN-GOVERNANCE-UNREADABLE", codes)
+        self.assertNotIn("TWIN-GOVERNANCE-MISSING", codes)
+
+    def test_invalid_governance_is_not_reported_as_missing(self) -> None:
+        repo = self.make_repo("invalid-governance")
+        (repo / ".governance/manifest.json").write_text("[]")
+        org = {"id": "subactor", "role": "runtime", "ssotCarriers": []}
+        observed = observe_local_repository(repo, org, 10)
+        config = {"organizations": [{"id": "subactor", "governanceExpected": True}]}
+        codes = [
+            item["code"]
+            for item in diagnose({"sources": [], "repositories": [observed], "control": {}}, config)
+        ]
+        self.assertIn("TWIN-GOVERNANCE-INVALID", codes)
+        self.assertNotIn("TWIN-GOVERNANCE-MISSING", codes)
+
+    def test_absent_governance_remains_missing(self) -> None:
+        repo = self.make_repo("absent-governance", governed=False)
+        org = {"id": "subactor", "role": "runtime", "ssotCarriers": []}
+        observed = observe_local_repository(repo, org, 10)
+        config = {"organizations": [{"id": "subactor", "governanceExpected": True}]}
+        codes = [
+            item["code"]
+            for item in diagnose({"sources": [], "repositories": [observed], "control": {}}, config)
+        ]
+        self.assertEqual(observed["declarations"]["governanceCarrier"]["status"], "absent")
+        self.assertIn("TWIN-GOVERNANCE-MISSING", codes)
 
     def test_document_version_keeps_repository_and_extracts_semver(self) -> None:
         repo = self.make_repo("document-version")

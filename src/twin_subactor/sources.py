@@ -222,12 +222,23 @@ def observe_local_repository(repo: Path, org: dict[str, Any], max_tickets: int) 
     carriers = [item for relative in org["ssotCarriers"] if (item := _carrier(repo, relative))]
     manifest_path = repo / ".governance/manifest.json"
     manifest: dict[str, Any] = {}
+    manifest_status = "absent"
+    manifest_error: str | None = None
     if manifest_path.is_file():
         try:
             candidate = json.loads(_read_bytes(manifest_path))
-            manifest = candidate if isinstance(candidate, dict) else {}
-        except (OSError, ValueError, json.JSONDecodeError):
-            pass
+            if isinstance(candidate, dict):
+                manifest = candidate
+                manifest_status = "valid"
+            else:
+                manifest_status = "invalid"
+                manifest_error = "DocumentTypeError"
+        except OSError as error:
+            manifest_status = "unreadable"
+            manifest_error = type(error).__name__
+        except (ValueError, json.JSONDecodeError) as error:
+            manifest_status = "invalid"
+            manifest_error = type(error).__name__
     version = None
     if (repo / "VERSION").is_file():
         version = _declared_version(repo / "VERSION")
@@ -251,6 +262,11 @@ def observe_local_repository(repo: Path, org: dict[str, Any], max_tickets: int) 
         "declarations": {
             "version": version,
             "governance": bool(manifest),
+            "governanceCarrier": {
+                "path": ".governance/manifest.json",
+                "status": manifest_status,
+                **({"error": manifest_error} if manifest_error else {}),
+            },
             "governanceSchema": manifest.get("schema"),
             "standard": manifest.get("standard"),
             "stacks": manifest.get("stacks", []),

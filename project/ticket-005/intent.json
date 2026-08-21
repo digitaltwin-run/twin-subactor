@@ -1,0 +1,68 @@
+{
+  "schema": "new-project.intent/v3",
+  "ticket": "ticket-005",
+  "summary": "Distinguish unreadable governance carriers",
+  "workstream": "integration",
+  "classification": {
+    "kind": "BUG",
+    "priority": "P1",
+    "origin": "health"
+  },
+  "allowedPaths": [
+    "src/twin_subactor/sources.py",
+    "src/twin_subactor/diagnosis.py",
+    "tests/test_twin.py",
+    "project/ticket-005/**",
+    "TODO.md",
+    "project/TICKETS.md"
+  ],
+  "forbiddenPaths": ["project/ticket-*/user-*.md"],
+  "stacks": ["python"],
+  "dependsOn": [],
+  "conflictsWith": [],
+  "integrationTicket": null,
+  "delivery": {
+    "acceptedBaseSha": "627f05e94213709f7b55667caa322ce54cd7ecce",
+    "targetBranch": "main",
+    "outcome": "Distinguish unreadable and invalid governance manifests from absent governance adoption using bounded read-only evidence",
+    "nonGoals": [
+      "Do not change permissions in observed repositories",
+      "Do not mutate an observed repository",
+      "Do not infer repair authority from observation errors",
+      "Do not read secrets or stash state",
+      "Do not merge directly"
+    ],
+    "complexity": "S",
+    "estimatedMinutes": 20,
+    "budgets": {
+      "maxImplementationFiles": 3,
+      "maxAffectedComponents": 2,
+      "maxPublicInterfaceChanges": 1,
+      "maxRuntimeDependencies": 0
+    },
+    "architecture": {
+      "status": "accepted",
+      "decision": "Record manifest observation status in the repository projection and route unreadable or invalid carriers to Doctor with stable error codes",
+      "components": [
+        {"name": "source-adapter", "paths": ["src/twin_subactor/sources.py"]},
+        {"name": "doctor-diagnosis", "paths": ["src/twin_subactor/diagnosis.py", "tests/test_twin.py"]}
+      ],
+      "responsibilityChanges": false,
+      "interfaceChanges": ["local repository declarations include governanceCarrier status"],
+      "dataChanges": [],
+      "ui": {"impact": "none", "states": [], "evidence": []},
+      "rollback": "Revert the governanceCarrier projection, diagnoses and regression tests"
+    },
+    "runtimeDependencies": [],
+    "validation": [
+      {
+        "criterion": "AC-04",
+        "commands": [
+          "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python -m unittest discover -s tests -v",
+          "./project/governance-check.sh --actor agent --base 627f05e94213709f7b55667caa322ce54cd7ecce --head HEAD"
+        ],
+        "evidence": "project/ticket-005/ai-ai-codex-logs.txt"
+      }
+    ]
+  }
+}
