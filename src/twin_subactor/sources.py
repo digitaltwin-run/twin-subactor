@@ -229,7 +229,7 @@ def _remote_repositories_with_gh(org_id: str) -> list[dict[str, Any]]:
 
 
 def _remote_repositories_with_http(org_id: str) -> list[dict[str, Any]]:
-    token = os.environ.get("GITHUB_TOKEN", "").strip()
+    authorization = os.environ.get("GITHUB_TOKEN", "").strip()
     repositories: list[dict[str, Any]] = []
     for page in range(1, 11):
         request = urllib.request.Request(
@@ -237,7 +237,7 @@ def _remote_repositories_with_http(org_id: str) -> list[dict[str, Any]]:
             headers={
                 "Accept": "application/vnd.github+json",
                 "User-Agent": "twin-subactor/0.1",
-                **({"Authorization": f"Bearer {token}"} if token else {}),
+                **({"Authorization": f"Bearer {authorization}"} if authorization else {}),
             },
         )
         with urllib.request.urlopen(request, timeout=15) as response:
@@ -310,14 +310,14 @@ def observe_control(config: dict[str, Any], offline: bool) -> tuple[list[dict[st
     if offline:
         return [{"id": "control", "kind": "control-read-model", "required": control["required"], "status": "disabled"}], {}
     base_url = os.environ.get(control["baseUrlEnv"], control["defaultBaseUrl"]).rstrip("/")
-    token = os.environ.get(control["tokenEnv"], "").strip()
+    authorization = os.environ.get(control["tokenEnv"], "").strip()
     projections: dict[str, Any] = {}
     endpoint_receipts: list[dict[str, Any]] = []
     for endpoint in control["endpoints"]:
         try:
             request = urllib.request.Request(
                 base_url + endpoint["path"],
-                headers={"Accept": "application/json", **({"Authorization": f"Bearer {token}"} if token else {})},
+                headers={"Accept": "application/json", **({"Authorization": f"Bearer {authorization}"} if authorization else {})},
             )
             with urllib.request.urlopen(request, timeout=control["timeoutSeconds"]) as response:
                 raw = response.read(int(control["maxResponseBytes"]) + 1)

@@ -73,7 +73,7 @@
         {"name": "ecosystem-projection", "paths": ["schemas/**", "src/twin_subactor/model.py"]},
         {"name": "decision-support", "paths": ["src/twin_subactor/diagnosis.py"]},
         {"name": "read-only-adapters", "paths": ["src/twin_subactor/cli.py", "src/twin_subactor/service.py"]},
-        {"name": "delivery", "paths": ["Dockerfile", ".github/**", "tests/**", "docs/**"]}
+        {"name": "delivery", "paths": ["Dockerfile", ".github/**", "CHANGELOG.md", "README.md", "pyproject.toml", "src/twin_subactor/__init__.py", "tests/**", "docs/**"]}
       ],
       "responsibilityChanges": false,
       "interfaceChanges": [
