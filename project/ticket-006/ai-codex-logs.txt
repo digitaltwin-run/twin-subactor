@@ -2,3 +2,5 @@
 2026-08-21T09:39:00Z live mismatch: Control reports 24 services, 1 process, 148 variables and 3 policy evaluations; Twin projects registryCount=4, state_variablesCount=3, state_policiesCount=9 and schema=null.
 2026-08-21T09:41:00Z regression suite: 17/17 tests pass; exact-base governance: GOV-PASS with zero errors and zero warnings.
 2026-08-21T09:41:00Z live bounded parity: registryCount=25, registryServiceCount=24, registryProcessCount=1, stateVariablesCount=148, statePoliciesCount=3; registry, variable and policy schemas preserved.
+2026-08-21T09:43:36Z Validator run 32469094110 approved exact head 07468986ab835a99ace14708ff1d684978415962 as review 4992002933; protected merge 3688a2bbb34d998b4a0e894d699b7aba9644d34d completed.
+2026-08-21T09:45:25Z merged live snapshot sha256:4455d56e1ba672d2d4768fa30f3b845daec79ff479f5367f870bfcd88a9948b3 projects 173 repositories, 25 registry entries, 148 state variables and 3 policy evaluations; empty-registry=0, observation-failed=0.
