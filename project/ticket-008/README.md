@@ -2,8 +2,8 @@
 
 - **ID**: ticket-008
 - **Owner**: unresolved:human
-- **Status**: IN_PROGRESS
-- **Workflow state**: PUBLICATION
+- **Status**: DONE
+- **Workflow state**: DONE
 - **Created**: 2026-08-21
 
 ## Goal and scope
@@ -30,6 +30,18 @@ distinct infrastructure/query roles.
   source receipt and digest
   `sha256:93de766f50cd0036adceb7e52b5a24455e170af9f35e58423a62acb38bee400a`.
 - Exact-base governance passes with zero errors and zero warnings.
+
+## Publication evidence
+
+- Pull request: `subactor/twin-subactor#15`.
+- Frozen and approved head: `2fbe290e28bc009f4ea7c6b902a26fe6cd432226`.
+- Trusted review: `ifuri-validator-agent[bot]`, exact-head `APPROVED`.
+- Merge commit: `e42bec4b51470c338da75af688844f5b39dfb432`.
+
+## Closure boundary
+
+This commit records the integrated result only. It changes no source adapter,
+observed repository or authority boundary.
 
 ## Authorization
 

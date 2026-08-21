@@ -11,3 +11,7 @@ snapshotDigest=sha256:93de766f50cd0036adceb7e52b5a24455e170af9f35e58423a62acb38b
 
 $ ./project/governance-check.sh --actor agent --base 49367ed8f514be5048263acabc655f218d5d17ef --head HEAD
 PASS: 0 errors, 0 warnings.
+
+Validator run: subactor/validator-agent actions/32502345481
+APPROVED head: 2fbe290e28bc009f4ea7c6b902a26fe6cd432226
+MERGED as: e42bec4b51470c338da75af688844f5b39dfb432
