@@ -1,0 +1,4 @@
+[2026-08-21T07:12:00Z] BOOTSTRAP: adopted published wellmanifest/new-project v0.18.1 at 16f7aea148a7f979e5c5abdfd4bc112224904d36.
+[2026-08-21T07:12:00Z] SEED PROFILE: 49 resolved carrier paths; sorted-path digest sha256:21b9037d1754e11673c58a6f85fbf7a7ba09de55108a29122ba9ab22345a2829.
+[2026-08-21T07:12:00Z] SECRET SCAN: no credential-shaped value found; matches were scanner source definitions only.
+[2026-08-21T07:12:00Z] ADOPTION: immutable lock check PASS; remote effects before seed commit: none.

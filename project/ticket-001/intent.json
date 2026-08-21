@@ -1,0 +1,95 @@
+{
+  "schema": "new-project.intent/v3",
+  "ticket": "ticket-001",
+  "summary": "Build the Subactor ecosystem Digital Twin",
+  "workstream": "integration",
+  "classification": {
+    "kind": "FEATURE",
+    "priority": "P1",
+    "origin": "requested"
+  },
+  "allowedPaths": [
+    ".governance/manifest.json",
+    ".github/**",
+    "CHANGELOG.md",
+    "Dockerfile",
+    "README.md",
+    "TODO.md",
+    "VERSION",
+    "compose.yml",
+    "config/**",
+    "docs/**",
+    "project/ticket-001/**",
+    "project/TICKETS.md",
+    "pyproject.toml",
+    "schemas/**",
+    "src/**",
+    "tests/**"
+  ],
+  "forbiddenPaths": ["project/ticket-*/user-*.md"],
+  "stacks": ["python", "docker"],
+  "dependsOn": [],
+  "conflictsWith": [],
+  "integrationTicket": null,
+  "placement": {
+    "home": "subactor",
+    "shape": "runtime_service",
+    "runtimeOwner": "subactor",
+    "adopt": [
+      "wellmanifest/new-project",
+      "wellmanifest/modularity",
+      "wellmanifest/twin-lifecycle",
+      "wellmanifest/dsl",
+      "wellmanifest/priority",
+      "wellmanifest/logs",
+      "wellmanifest/repair-lifecycle",
+      "wellmanifest/validation-attestation",
+      "wellmanifest/skills"
+    ]
+  },
+  "delivery": {
+    "targetBranch": "main",
+    "outcome": "Publish a private, read-only ecosystem Digital Twin that discovers all configured repositories, projects source health and emits digest-bound next-action candidates without acquiring execution authority.",
+    "nonGoals": [
+      "No second scheduler, controller or event-store authority",
+      "No repository mutation, stash handling, secret intake or repair apply",
+      "No direct PR approval or merge decision",
+      "No inference that an unavailable source is healthy",
+      "No semantic ownership inferred from repository name alone"
+    ],
+    "complexity": "L",
+    "estimatedMinutes": 180,
+    "budgets": {
+      "maxImplementationFiles": 15,
+      "maxAffectedComponents": 5,
+      "maxPublicInterfaceChanges": 3,
+      "maxRuntimeDependencies": 0
+    },
+    "architecture": {
+      "status": "accepted",
+      "decision": "Build one read-only projector over bounded repository and Control adapters. Persist only rebuildable snapshots. Emit advisory handoff candidates bound to content digests; leave scheduling and all effects in existing Subactor runtimes.",
+      "components": [
+        {"name": "source-adapters", "paths": ["config/**", "src/twin_subactor/sources.py"]},
+        {"name": "ecosystem-projection", "paths": ["schemas/**", "src/twin_subactor/model.py"]},
+        {"name": "decision-support", "paths": ["src/twin_subactor/diagnosis.py"]},
+        {"name": "read-only-adapters", "paths": ["src/twin_subactor/cli.py", "src/twin_subactor/service.py"]},
+        {"name": "delivery", "paths": ["Dockerfile", "compose.yml", "tests/**", "docs/**"]}
+      ],
+      "responsibilityChanges": false,
+      "interfaceChanges": [
+        "twin-subactor CLI snapshot/diagnose/recommend",
+        "read-only HTTP health/snapshot/diagnoses/next-actions",
+        "subactor.ecosystem-twin.snapshot/v1 JSON projection"
+      ],
+      "dataChanges": ["Rebuildable snapshot files contain hashes and source metadata but no credentials"],
+      "ui": {"impact": "none", "states": [], "evidence": []},
+      "rollback": "Remove the service registration and repository; no external system state is owned by the Twin"
+    },
+    "runtimeDependencies": [],
+    "validation": [
+      {"criterion": "AC-01..AC-04", "commands": ["python -m unittest discover -s tests -v"], "evidence": "Deterministic discovery, freshness, deduplication and handoff tests pass"},
+      {"criterion": "AC-05", "commands": ["docker compose config", "docker build ."], "evidence": "Read-only non-root runtime profile builds"},
+      {"criterion": "AC-06", "commands": ["./project/governance-check.sh --actor agent --base <acceptedBaseSha> --head HEAD"], "evidence": "Governance and stack checks pass on the exact head"}
+    ]
+  }
+}
