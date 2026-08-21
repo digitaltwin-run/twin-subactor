@@ -3,7 +3,7 @@
 - **ID**: ticket-006
 - **Owner**: unresolved:human
 - **Status**: IN_PROGRESS
-- **Workflow state**: EDIT
+- **Workflow state**: PUBLICATION
 - **Created**: 2026-08-21
 
 ## Goal and scope
@@ -18,12 +18,21 @@ mutate registry state or gain execution authority.
 
 ## Acceptance criteria
 
-- [ ] AC-01: Registry count equals services plus processes, not envelope keys.
-- [ ] AC-02: State-variable count equals nested variables and policy count
+- [x] AC-01: Registry count equals services plus processes, not envelope keys.
+- [x] AC-02: State-variable count equals nested variables and policy count
       equals nested evaluations.
-- [ ] AC-03: Nested registry schemas are preserved in the bounded projection.
-- [ ] AC-04: Unit, governance and live Control/Twin parity checks pass.
+- [x] AC-03: Nested registry schemas are preserved in the bounded projection.
+- [x] AC-04: Unit, governance and live Control/Twin parity checks pass.
 - [ ] AC-05: Exact-head Validator performs protected publication.
+
+## Validation evidence
+
+- 17 unit tests pass, including an exact nested system-state fixture.
+- Exact-base governance reports zero errors and zero warnings.
+- Applying the new bounded summarizer directly to the authenticated live Control
+  response yields: 25 registry entries (24 services + 1 process), 148 state
+  variables and 3 policy evaluations. All three nested schemas are preserved.
+- No full Control payload or credential was logged or retained.
 
 ## Authorization
 

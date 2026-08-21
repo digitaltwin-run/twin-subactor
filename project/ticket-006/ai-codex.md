@@ -23,6 +23,9 @@ numbers and schema remain materially misleading.
 
 - Initialized the bounded ticket and recorded SESSION_EXECUTION_AUTHORIZATION
   from the request to execute this work.
+- Replaced generic envelope lengths with semantic nested counts.
+- Preserved registry, state-variable and state-policy schema identifiers.
+- Verified exact parity against the authenticated live Control read model.
 
 ## Blockers
 
