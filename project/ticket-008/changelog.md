@@ -4,3 +4,6 @@
 
 - Initial governance scaffold created.
 - No human participant identity or content was generated.
+- Registered Autogrammar as a read-only typed grammar and DSL evidence source.
+- Documented organization responsibility boundaries and covered the production
+  source configuration with a regression test.

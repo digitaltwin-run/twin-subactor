@@ -348,6 +348,21 @@ class TwinTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             load_config(path)
 
+    def test_production_config_declares_active_organization_roles(self) -> None:
+        config = load_config(Path(__file__).resolve().parents[1] / "config/sources.json")
+        organizations = {item["id"]: item for item in config["organizations"]}
+
+        self.assertEqual(
+            {"subactor", "wellmanifest", "semcod", "autogrammar"},
+            {"subactor", "wellmanifest", "semcod", "autogrammar"} & organizations.keys(),
+        )
+        self.assertEqual(
+            organizations["autogrammar"]["localRoot"],
+            {"env": "AUTOGRAMMAR_REPOSITORIES_ROOT", "default": "workspace://autogrammar"},
+        )
+        self.assertEqual(organizations["autogrammar"]["role"], "typed-grammar-and-dsl-tool-source")
+        self.assertFalse(organizations["autogrammar"]["governanceExpected"])
+
 
 if __name__ == "__main__":
     unittest.main()

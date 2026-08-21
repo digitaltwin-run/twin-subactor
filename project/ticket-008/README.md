@@ -3,7 +3,7 @@
 - **ID**: ticket-008
 - **Owner**: unresolved:human
 - **Status**: IN_PROGRESS
-- **Workflow state**: EDIT
+- **Workflow state**: VALIDATION
 - **Created**: 2026-08-21
 
 ## Goal and scope
@@ -15,13 +15,20 @@ distinct infrastructure/query roles.
 
 ## Acceptance criteria
 
-- [ ] AC-01: Autogrammar is declared with a closed organization id, role and
+- [x] AC-01: Autogrammar is declared with a closed organization id, role and
   overridable workspace root.
-- [ ] AC-02: Local and remote Twin discovery includes Autogrammar without
+- [x] AC-02: Local and remote Twin discovery includes Autogrammar without
   granting it governance or mutation authority.
 - [ ] AC-03: Unit and governance checks pass.
-- [ ] AC-04: Platform can mount the organization root separately under a
+- [x] AC-04: Platform can mount the organization root separately under a
   follow-up Platform ticket.
+
+## Validation evidence
+
+- All 20 unit tests pass, including the production role and root contract.
+- An offline live snapshot observes 36 Autogrammar repositories with a healthy
+  source receipt and digest
+  `sha256:93de766f50cd0036adceb7e52b5a24455e170af9f35e58423a62acb38bee400a`.
 
 ## Authorization
 
