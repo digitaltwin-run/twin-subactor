@@ -1,0 +1,13 @@
+2026-08-21T16:05:00Z
+$ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python -m unittest discover -s tests -v
+PASS: 20 tests.
+
+$ PYTHONPATH=src python -m twin_subactor.cli snapshot --offline
+FAIL: global --offline was placed after the subcommand; argparse rejected it.
+
+$ PYTHONPATH=src python -m twin_subactor.cli --offline snapshot
+PASS: Autogrammar source healthy; 36 repositories observed.
+snapshotDigest=sha256:93de766f50cd0036adceb7e52b5a24455e170af9f35e58423a62acb38bee400a
+
+$ ./project/governance-check.sh --actor agent --base 49367ed8f514be5048263acabc655f218d5d17ef --head HEAD
+PASS: 0 errors, 0 warnings.

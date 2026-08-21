@@ -37,6 +37,14 @@
       "ssotCarriers": [".governance/manifest.json", "dsl-manifest.json", "project/TICKETS.md", "VERSION"]
     },
     {
+      "id": "autogrammar",
+      "required": false,
+      "governanceExpected": false,
+      "role": "typed-grammar-and-dsl-tool-source",
+      "localRoot": {"env": "AUTOGRAMMAR_REPOSITORIES_ROOT", "default": "workspace://autogrammar"},
+      "ssotCarriers": [".governance/manifest.json", "dsl-manifest.json", "docs/dsl-manifest.json", "project/TICKETS.md", "VERSION"]
+    },
+    {
       "id": "oqlos",
       "required": false,
       "governanceExpected": false,

@@ -25,9 +25,16 @@ twin-subactor serve --host 127.0.0.1 --port 8188
 Organization roots can be overridden with the environment names in
 [`config/sources.json`](config/sources.json). Tokens are read from
 `GITHUB_TOKEN` and `SUBACTOR_ADMIN_TOKEN` only for request headers.
-The Platform deployment mounts the five organization roots read-only and passes
+The Platform deployment mounts the six organization roots read-only and passes
 their container paths through these variables. Standalone containers must do
 the same explicitly.
+
+The organization roles are deliberately separate: Subactor owns product
+runtime, Wellmanifest owns adopted standards, Semcod contributes code and
+intent evidence tools, and Autogrammar contributes typed grammar and DSL
+tooling. Optional `uri-twin` and `oqlos` roots remain infrastructure-observation
+and typed-query sources. These roles classify evidence; they do not grant
+repair, repository-transfer or merge authority.
 
 The service exposes `GET /health`, `/v1/snapshot`, `/v1/diagnoses` and
 `/v1/next-actions`. All endpoints are read-only and return `Cache-Control:
