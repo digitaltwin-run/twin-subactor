@@ -14,6 +14,9 @@ from typing import Any
 ORG_RE = re.compile(r"^[a-z0-9](?:[a-z0-9-]{0,37}[a-z0-9])?$")
 STATUS_RE = re.compile(r"^- \*\*Status\*\*:\s*([A-Z_]+)\s*$", re.MULTILINE)
 WORKFLOW_RE = re.compile(r"^- \*\*Workflow state\*\*:\s*([A-Z_]+)\s*$", re.MULTILINE)
+SEMANTIC_VERSION_RE = re.compile(
+    r"(?<![0-9A-Za-z.-])(v?\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?)(?![0-9A-Za-z.-])"
+)
 
 
 def canonical_bytes(value: Any) -> bytes:
@@ -92,6 +95,17 @@ def _carrier(repo: Path, relative: str) -> dict[str, Any] | None:
         return {"path": relative, "status": "invalid", "error": type(error).__name__}
 
 
+def _declared_version(path: Path) -> str | None:
+    try:
+        text = _read_bytes(path).decode("utf-8", "replace").strip()
+    except (OSError, ValueError):
+        return None
+    if text and "\n" not in text and len(text.encode()) <= 128:
+        return text
+    match = SEMANTIC_VERSION_RE.search(text)
+    return match.group(1) if match else None
+
+
 def observe_local_repository(repo: Path, org: dict[str, Any], max_tickets: int) -> dict[str, Any]:
     origin = _git(repo, "remote", "get-url", "origin", check=False)
     full_name = _origin_full_name(origin) or f"{org['id']}/{repo.name}"
@@ -120,7 +134,7 @@ def observe_local_repository(repo: Path, org: dict[str, Any], max_tickets: int) 
             pass
     version = None
     if (repo / "VERSION").is_file():
-        version = _read_bytes(repo / "VERSION", 128).decode("utf-8", "replace").strip()
+        version = _declared_version(repo / "VERSION")
     return {
         "id": full_name,
         "organization": org["id"],
