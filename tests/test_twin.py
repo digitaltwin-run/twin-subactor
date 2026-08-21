@@ -39,6 +39,25 @@ class TwinTests(unittest.TestCase):
             (repo / "README.md").write_text("changed\n")
         return repo
 
+    def install_guard(self, repo: Path, *, runner: bool = True, track_runner: bool = True, fail_closed: bool = True, wire: bool = True) -> None:
+        (repo / ".governance").mkdir(exist_ok=True)
+        (repo / ".githooks").mkdir(exist_ok=True)
+        (repo / "worktree-guard.yaml").write_text("schema: worktree-guard/v1\n")
+        (repo / ".governance/worktree_overlap_check.py").write_text("# overlap\n")
+        if runner:
+            (repo / ".governance/worktree_guard.py").write_text("# runner\n")
+        (repo / ".githooks/pre-commit").write_text(
+            '#!/bin/sh\n"$(dirname "$0")/pre-commit-worktree-guard"\n' if wire else "#!/bin/sh\nexit 0\n"
+        )
+        fragment = "#!/bin/sh\necho 'worktree_guard.py is missing'\nexit 1\n" if fail_closed else "#!/bin/sh\nexit 0\n"
+        (repo / ".githooks/pre-commit-worktree-guard").write_text(fragment)
+        tracked = ["worktree-guard.yaml", ".governance/worktree_overlap_check.py", ".githooks/pre-commit", ".githooks/pre-commit-worktree-guard"]
+        if runner and track_runner:
+            tracked.append(".governance/worktree_guard.py")
+        subprocess.run(["git", "-C", str(repo), "add", *tracked], check=True)
+        subprocess.run(["git", "-C", str(repo), "commit", "-m", "guard"], check=True, capture_output=True)
+        subprocess.run(["git", "-C", str(repo), "config", "core.hooksPath", ".githooks"], check=True)
+
     def test_local_observation_uses_declared_role_and_reports_dirty(self) -> None:
         repo = self.make_repo("alpha", dirty=True)
         org = {"id": "subactor", "role": "declared-test-role", "ssotCarriers": [".governance/manifest.json"]}
@@ -57,6 +76,42 @@ class TwinTests(unittest.TestCase):
         self.assertEqual(observed["declarations"]["version"], "0.12.0")
         self.assertEqual(observed["ssotCarriers"][0]["status"], "valid")
         self.assertIn("git", observed)
+
+    def test_guard_projection_distinguishes_healthy_and_fail_open(self) -> None:
+        healthy = self.make_repo("guard-healthy")
+        self.install_guard(healthy)
+        fail_open = self.make_repo("guard-fail-open")
+        self.install_guard(fail_open, fail_closed=False)
+        org = {"id": "subactor", "role": "runtime", "ssotCarriers": []}
+        healthy_observation = observe_local_repository(healthy, org, 10)
+        fail_open_observation = observe_local_repository(fail_open, org, 10)
+        self.assertEqual(healthy_observation["governanceGuard"]["status"], "healthy")
+        self.assertFalse(fail_open_observation["governanceGuard"]["failClosedWithoutRunner"])
+
+        config = {"organizations": [{"id": "subactor", "governanceExpected": True}]}
+        snapshot = {"sources": [], "repositories": [healthy_observation, fail_open_observation], "control": {}}
+        codes = [item["code"] for item in diagnose(snapshot, config)]
+        self.assertEqual(codes.count("TWIN-WORKTREE-GUARD-FAIL-OPEN"), 1)
+
+    def test_guard_source_configuration_is_not_mistaken_for_an_adoption(self) -> None:
+        repo = self.make_repo("guard-standard-source")
+        (repo / "worktree-guard.yaml").write_text("schema: worktree-guard/v1\n")
+        org = {"id": "wellmanifest", "role": "domain-standard-source", "ssotCarriers": []}
+        observed = observe_local_repository(repo, org, 10)
+        self.assertEqual(observed["governanceGuard"], {"declared": False, "status": "not-declared"})
+
+    def test_guard_projection_reports_missing_and_untracked_runners(self) -> None:
+        missing = self.make_repo("guard-missing")
+        self.install_guard(missing, runner=False)
+        untracked = self.make_repo("guard-untracked")
+        self.install_guard(untracked, track_runner=False)
+        org = {"id": "subactor", "role": "runtime", "ssotCarriers": []}
+        repositories = [observe_local_repository(missing, org, 10), observe_local_repository(untracked, org, 10)]
+        config = {"organizations": [{"id": "subactor", "governanceExpected": True}]}
+        findings = diagnose({"sources": [], "repositories": repositories, "control": {}}, config)
+        by_target = {(item["target"], item["code"]) for item in findings}
+        self.assertIn(("repo:subactor/guard-missing", "TWIN-WORKTREE-GUARD-RUNNER-MISSING"), by_target)
+        self.assertIn(("repo:subactor/guard-untracked", "TWIN-WORKTREE-GUARD-UNTRACKED"), by_target)
 
     def test_unparseable_document_version_degrades_only_version_field(self) -> None:
         repo = self.make_repo("unparseable-version")
