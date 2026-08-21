@@ -10,7 +10,7 @@ from unittest import mock
 
 from twin_subactor.diagnosis import diagnose, next_actions
 from twin_subactor.model import _merge_repositories, build_snapshot
-from twin_subactor.sources import digest, discover_local, discover_remote, load_config, observe_local_repository
+from twin_subactor.sources import _bounded_summary, digest, discover_local, discover_remote, load_config, observe_local_repository
 
 
 class TwinTests(unittest.TestCase):
@@ -216,6 +216,43 @@ class TwinTests(unittest.TestCase):
         self.assertEqual(sources[0]["status"], "healthy")
         self.assertEqual(sources[0]["scope"], "authenticated")
         self.assertEqual(repositories[0]["id"], "subactor/private")
+
+    def test_system_state_summary_counts_nested_registry_values(self) -> None:
+        body = {
+            "ok": True,
+            "registry": {
+                "schema": "subactor.digital-twin-state-registry/v1",
+                "observed_at": "2026-08-21T09:28:22Z",
+                "services": [{"id": "control"}, {"id": "planfile"}],
+                "processes": [{"id": "controller-cycle"}],
+            },
+            "state_variables": {
+                "schema": "subactor.system-state-variable-registry/v1",
+                "observed_at": "2026-08-21T09:28:22Z",
+                "variables": [{"ref": "state://one"}, {"ref": "state://two"}],
+            },
+            "state_policies": {
+                "schema": "subactor.state-policy-evaluation/v1",
+                "policy_registry": {"schema": "subactor.state-policy-registry/v1", "version": 1},
+                "variable_registry": {"variables": [{"ref": "state://one"}, {"ref": "state://two"}]},
+                "evaluations": [{"policy": "one"}],
+                "created": [],
+                "covered": [],
+            },
+        }
+
+        summary = _bounded_summary("system-state", body)
+
+        self.assertEqual(summary["registrySchema"], "subactor.digital-twin-state-registry/v1")
+        self.assertEqual(summary["registryServiceCount"], 2)
+        self.assertEqual(summary["registryProcessCount"], 1)
+        self.assertEqual(summary["registryCount"], 3)
+        self.assertEqual(summary["stateVariablesSchema"], "subactor.system-state-variable-registry/v1")
+        self.assertEqual(summary["stateVariablesCount"], 2)
+        self.assertEqual(summary["state_variablesCount"], 2)
+        self.assertEqual(summary["statePoliciesSchema"], "subactor.state-policy-evaluation/v1")
+        self.assertEqual(summary["statePoliciesCount"], 1)
+        self.assertEqual(summary["state_policiesCount"], 1)
 
     def test_findings_are_deduplicated_and_handoffs_require_authority(self) -> None:
         snapshot = {

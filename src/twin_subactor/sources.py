@@ -431,12 +431,35 @@ def _bounded_summary(identifier: str, body: Any) -> dict[str, Any]:
         if isinstance(body.get("autonomy"), dict):
             summary["autonomy"] = body["autonomy"]
     if identifier == "system-state":
-        for key in ("registry", "stateVariables", "state_variables", "statePolicies", "state_policies"):
-            value = body.get(key)
-            if isinstance(value, (list, dict)):
-                summary[f"{key}Count"] = len(value)
-            elif value is None:
-                summary[f"{key}Count"] = 0
+        registry = body.get("registry") if isinstance(body.get("registry"), dict) else {}
+        services = registry.get("services") if isinstance(registry.get("services"), (list, dict)) else []
+        processes = registry.get("processes") if isinstance(registry.get("processes"), (list, dict)) else []
+        summary.update(
+            registrySchema=registry.get("schema"),
+            registryServiceCount=len(services),
+            registryProcessCount=len(processes),
+            registryCount=len(services) + len(processes),
+        )
+
+        variables = body.get("stateVariables") or body.get("state_variables")
+        variables = variables if isinstance(variables, dict) else {}
+        variable_items = variables.get("variables") if isinstance(variables.get("variables"), (list, dict)) else []
+        summary.update(
+            stateVariablesSchema=variables.get("schema"),
+            stateVariablesCount=len(variable_items),
+        )
+        if "state_variables" in body:
+            summary["state_variablesCount"] = len(variable_items)
+
+        policies = body.get("statePolicies") or body.get("state_policies")
+        policies = policies if isinstance(policies, dict) else {}
+        evaluations = policies.get("evaluations") if isinstance(policies.get("evaluations"), (list, dict)) else []
+        summary.update(
+            statePoliciesSchema=policies.get("schema"),
+            statePoliciesCount=len(evaluations),
+        )
+        if "state_policies" in body:
+            summary["state_policiesCount"] = len(evaluations)
     return summary
 
 

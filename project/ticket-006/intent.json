@@ -1,0 +1,65 @@
+{
+  "schema": "new-project.intent/v3",
+  "ticket": "ticket-006",
+  "summary": "Project nested Control registry cardinalities",
+  "workstream": "integration",
+  "classification": {
+    "kind": "BUG",
+    "priority": "P1",
+    "origin": "regression"
+  },
+  "allowedPaths": [
+    "src/twin_subactor/sources.py",
+    "tests/test_twin.py",
+    "project/ticket-006/**",
+    "TODO.md",
+    "project/TICKETS.md"
+  ],
+  "forbiddenPaths": ["project/ticket-*/user-*.md"],
+  "stacks": [],
+  "dependsOn": [],
+  "conflictsWith": [],
+  "integrationTicket": null,
+  "delivery": {
+    "acceptedBaseSha": "f569534ab39d29df1e542fff68675dea06db9e46",
+    "targetBranch": "main",
+    "outcome": "Project exact semantic cardinalities and nested schemas from the bounded Control system-state read model",
+    "nonGoals": [
+      "Do not retain the full Control response",
+      "Do not mutate Control registry state",
+      "Do not change autonomy or repair authority",
+      "Do not merge directly"
+    ],
+    "complexity": "XS",
+    "estimatedMinutes": 10,
+    "budgets": {
+      "maxImplementationFiles": 2,
+      "maxAffectedComponents": 1,
+      "maxPublicInterfaceChanges": 0,
+      "maxRuntimeDependencies": 0
+    },
+    "architecture": {
+      "status": "accepted",
+      "decision": "Replace generic envelope lengths with explicit bounded nested counts and schema fields for the system-state projection",
+      "components": [
+        {"name": "control-source-adapter", "paths": ["src/twin_subactor/sources.py", "tests/test_twin.py"]}
+      ],
+      "responsibilityChanges": false,
+      "interfaceChanges": [],
+      "dataChanges": [],
+      "ui": {"impact": "none", "states": [], "evidence": []},
+      "rollback": "Revert the system-state summarizer and its regression fixture"
+    },
+    "runtimeDependencies": [],
+    "validation": [
+      {
+        "criterion": "AC-04",
+        "commands": [
+          "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python -m unittest discover -s tests -v",
+          "./project/governance-check.sh --actor agent --base f569534ab39d29df1e542fff68675dea06db9e46 --head HEAD"
+        ],
+        "evidence": "project/ticket-006/ai-codex-logs.txt"
+      }
+    ]
+  }
+}

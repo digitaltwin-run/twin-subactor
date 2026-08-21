@@ -1,0 +1,4 @@
+2026-08-21T09:38:32Z ticket allocated through project/new-ticket.sh at integrated base f569534ab39d29df1e542fff68675dea06db9e46.
+2026-08-21T09:39:00Z live mismatch: Control reports 24 services, 1 process, 148 variables and 3 policy evaluations; Twin projects registryCount=4, state_variablesCount=3, state_policiesCount=9 and schema=null.
+2026-08-21T09:41:00Z regression suite: 17/17 tests pass; exact-base governance: GOV-PASS with zero errors and zero warnings.
+2026-08-21T09:41:00Z live bounded parity: registryCount=25, registryServiceCount=24, registryProcessCount=1, stateVariablesCount=148, statePoliciesCount=3; registry, variable and policy schemas preserved.
