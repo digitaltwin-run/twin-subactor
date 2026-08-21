@@ -13,3 +13,15 @@ sources partial/public-only; healthy empty remote sources=0; repositories=173.
 
 2026-08-21T08:05:30Z publication-state
 WORKFLOW=IN_PROGRESS/PUBLICATION
+
+2026-08-21T08:09:22Z protected-publication
+PR=subactor/twin-subactor#5
+FROZEN_HEAD=32afbb0553478b7c11becb70c325a17b153a0429
+VALIDATOR_RUN=32461716483
+VALIDATOR_REVIEW=4991155944
+MERGE_COMMIT=32b845f
+REMOTE_BRANCH=deleted
+
+2026-08-21T08:10:00Z terminal-closure
+WORKFLOW=DONE/DONE
+BOUNDARY=governance-only; no adapter, credential, receipt or deployment change

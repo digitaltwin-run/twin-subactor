@@ -2,8 +2,8 @@
 
 - **ID**: ticket-003
 - **Owner**: unresolved:human
-- **Status**: IN_PROGRESS
-- **Workflow state**: PUBLICATION
+- **Status**: DONE
+- **Workflow state**: DONE
 - **Created**: 2026-08-21
 
 ## Goal and scope
@@ -30,6 +30,19 @@ request, log or infer a credential.
   all five anonymous remote observations `partial/public-only`.
 - The anonymously empty Subactor remote result is no longer healthy; public
   repositories remain available as bounded evidence.
+
+## Publication evidence
+
+- Pull request: `subactor/twin-subactor#5`.
+- Frozen and approved head: `32afbb0553478b7c11becb70c325a17b153a0429`.
+- Validator run: `32461716483`; review: `4991155944`.
+- Merge commit: `32b845f`; merged `2026-08-21T08:09:22Z`.
+- The protected delivery process deleted the remote implementation branch.
+
+## Closure boundary
+
+This governance-only closure changes no adapter, credential, source receipt or
+deployed service state.
 
 ## Participants
 

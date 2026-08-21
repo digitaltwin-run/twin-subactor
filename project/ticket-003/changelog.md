@@ -8,3 +8,4 @@
   to remote source receipt classification.
 - Classified unauthenticated GitHub HTTP observations as partial/public-only and
   added anonymous and authenticated regression coverage.
+- Recorded protected exact-head publication and governance-only closure.
