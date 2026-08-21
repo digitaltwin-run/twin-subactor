@@ -22,6 +22,9 @@ observation failure, not evidence that governance was never adopted.
 
 - Initialized the bounded ticket and recorded SESSION_EXECUTION_AUTHORIZATION
   from the request to execute this work.
+- Added explicit absent, valid, invalid and unreadable governance-carrier states.
+- Routed unreadable and invalid carriers to Doctor without mutation authority.
+- Proved the classification with deterministic fixtures and the hardened live image.
 
 ## Blockers
 
