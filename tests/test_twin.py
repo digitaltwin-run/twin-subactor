@@ -69,7 +69,7 @@ class TwinTests(unittest.TestCase):
 
     def test_unreadable_governance_is_not_reported_as_missing(self) -> None:
         repo = self.make_repo("unreadable-governance")
-        org = {"id": "subactor", "role": "runtime", "ssotCarriers": []}
+        org = {"id": "subactor", "role": "runtime", "ssotCarriers": [".governance/manifest.json"]}
         original_read = __import__("twin_subactor.sources", fromlist=["_read_bytes"])._read_bytes
 
         def deny_manifest(path: Path, limit: int = 1_048_576) -> bytes:
@@ -89,8 +89,48 @@ class TwinTests(unittest.TestCase):
         config = {"organizations": [{"id": "subactor", "governanceExpected": True}]}
         findings = diagnose({"sources": [], "repositories": [observed], "control": {}}, config)
         codes = [item["code"] for item in findings]
+        self.assertEqual(observed["ssotCarriers"][0]["status"], "unreadable")
+        self.assertEqual(codes.count("TWIN-GOVERNANCE-UNREADABLE"), 1)
         self.assertIn("TWIN-GOVERNANCE-UNREADABLE", codes)
         self.assertNotIn("TWIN-GOVERNANCE-MISSING", codes)
+        self.assertNotIn("TWIN-SSOT-INVALID", codes)
+        self.assertNotIn("TWIN-SSOT-UNREADABLE", codes)
+
+    def test_distinct_unreadable_ssot_carrier_routes_to_doctor(self) -> None:
+        repo = self.make_repo("unreadable-ssot")
+        carrier_path = repo / "contract.json"
+        carrier_path.write_text('{"schema":"example/v1"}')
+        org = {"id": "subactor", "role": "runtime", "ssotCarriers": ["contract.json"]}
+        original_read = __import__("twin_subactor.sources", fromlist=["_read_bytes"])._read_bytes
+
+        def deny_carrier(path: Path, limit: int = 1_048_576) -> bytes:
+            if path == carrier_path:
+                raise PermissionError("fixture denies the hardened reader")
+            return original_read(path, limit)
+
+        with mock.patch("twin_subactor.sources._read_bytes", side_effect=deny_carrier):
+            observed = observe_local_repository(repo, org, 10)
+
+        config = {"organizations": [{"id": "subactor", "governanceExpected": True}]}
+        findings = diagnose({"sources": [], "repositories": [observed], "control": {}}, config)
+        by_code = {item["code"]: item for item in findings}
+        self.assertEqual(observed["ssotCarriers"][0]["status"], "unreadable")
+        self.assertEqual(by_code["TWIN-SSOT-UNREADABLE"]["route"], "doctor-agent")
+        self.assertNotIn("TWIN-SSOT-INVALID", by_code)
+
+    def test_invalid_readable_ssot_carrier_remains_invalid(self) -> None:
+        repo = self.make_repo("invalid-ssot")
+        (repo / "contract.json").write_text("not-json")
+        org = {"id": "subactor", "role": "runtime", "ssotCarriers": ["contract.json"]}
+        observed = observe_local_repository(repo, org, 10)
+        config = {"organizations": [{"id": "subactor", "governanceExpected": True}]}
+        codes = [
+            item["code"]
+            for item in diagnose({"sources": [], "repositories": [observed], "control": {}}, config)
+        ]
+        self.assertEqual(observed["ssotCarriers"][0]["status"], "invalid")
+        self.assertIn("TWIN-SSOT-INVALID", codes)
+        self.assertNotIn("TWIN-SSOT-UNREADABLE", codes)
 
     def test_invalid_governance_is_not_reported_as_missing(self) -> None:
         repo = self.make_repo("invalid-governance")
