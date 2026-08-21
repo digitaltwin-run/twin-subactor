@@ -1,0 +1,67 @@
+{
+  "schema": "new-project.intent/v3",
+  "ticket": "ticket-008",
+  "summary": "Add Autogrammar as an ecosystem source",
+  "workstream": "integration",
+  "classification": {
+    "kind": "FEATURE",
+    "priority": "P1",
+    "origin": "requested"
+  },
+  "allowedPaths": [
+    "config/sources.json",
+    "README.md",
+    "tests/test_twin.py",
+    "project/ticket-008/**",
+    "TODO.md",
+    "project/TICKETS.md"
+  ],
+  "forbiddenPaths": ["project/ticket-*/user-*.md"],
+  "stacks": [],
+  "dependsOn": [],
+  "conflictsWith": [],
+  "integrationTicket": null,
+  "delivery": {
+    "acceptedBaseSha": "49367ed8f514be5048263acabc655f218d5d17ef",
+    "targetBranch": "main",
+    "outcome": "Observe Autogrammar as a distinct read-only ecosystem source",
+    "nonGoals": [
+      "Do not move repositories between GitHub organizations",
+      "Do not execute analyzers or repairs",
+      "Do not change Twin mutation authority",
+      "Do not merge directly"
+    ],
+    "complexity": "S",
+    "estimatedMinutes": 15,
+    "budgets": {
+      "maxImplementationFiles": 3,
+      "maxAffectedComponents": 2,
+      "maxPublicInterfaceChanges": 1,
+      "maxRuntimeDependencies": 0
+    },
+    "architecture": {
+      "status": "accepted",
+      "decision": "Treat Autogrammar as a sibling grammar and DSL evidence source while Twin remains the read-only ecosystem aggregator",
+      "components": [
+        {"name": "source-config", "paths": ["config/sources.json"]},
+        {"name": "operator-contract", "paths": ["README.md", "tests/test_twin.py"]}
+      ],
+      "responsibilityChanges": false,
+      "interfaceChanges": ["AUTOGRAMMAR_REPOSITORIES_ROOT becomes a supported source-root override"],
+      "dataChanges": ["Twin snapshots may include organization autogrammar"],
+      "ui": {"impact": "none", "states": [], "evidence": []},
+      "rollback": "Remove the Autogrammar source declaration and its operator documentation"
+    },
+    "runtimeDependencies": [],
+    "validation": [
+      {
+        "criterion": "AC-03",
+        "commands": [
+          "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python -m unittest discover -s tests -v",
+          "./project/governance-check.sh --actor agent --base 49367ed8f514be5048263acabc655f218d5d17ef --head HEAD"
+        ],
+        "evidence": "project/ticket-008/ai-codex-logs.txt"
+      }
+    ]
+  }
+}
