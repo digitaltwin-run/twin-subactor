@@ -16,3 +16,15 @@ observation failures=0 under the production hardening boundary.
 
 2026-08-21T07:52:30Z publication-state
 WORKFLOW=IN_PROGRESS/PUBLICATION
+
+2026-08-21T07:56:54Z protected-publication
+PR=subactor/twin-subactor#3
+FROZEN_HEAD=a861b41b72fc8960136fec076c2f7b8b269e20d4
+VALIDATOR_RUN=32460735334
+VALIDATOR_REVIEW=4991051432
+MERGE_COMMIT=9ec8cb1b0d0deaff6adb0c07337d781408a97665
+REMOTE_BRANCH=deleted
+
+2026-08-21T07:57:30Z terminal-closure
+WORKFLOW=DONE/DONE
+BOUNDARY=governance-only; no adapter, test, snapshot or target mutation

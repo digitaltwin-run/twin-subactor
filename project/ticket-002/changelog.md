@@ -8,3 +8,4 @@
   the repair to VERSION parsing in the source adapter.
 - Preserved complete repository observations for document-shaped VERSION files
   and added parseable/unparseable regression coverage.
+- Recorded protected exact-head publication and governance-only closure.
