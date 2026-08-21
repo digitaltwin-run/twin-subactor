@@ -2,8 +2,8 @@
 
 - **ID**: ticket-002
 - **Owner**: unresolved:human
-- **Status**: IN_PROGRESS
-- **Workflow state**: PUBLICATION
+- **Status**: DONE
+- **Workflow state**: DONE
 - **Created**: 2026-08-21
 
 ## Goal and scope
@@ -32,6 +32,20 @@ because the carrier is document-shaped or has no parseable scalar.
   emits zero `TWIN-REPOSITORY-OBSERVATION-FAILED` findings.
 - The repair changes only the source adapter and its regression tests; it does
   not mutate the observed repository or widen authority.
+
+## Publication evidence
+
+- Pull request: `subactor/twin-subactor#3`.
+- Frozen and approved head: `a861b41b72fc8960136fec076c2f7b8b269e20d4`.
+- Validator run: `32460735334`; review: `4991051432`.
+- Merge commit: `9ec8cb1b0d0deaff6adb0c07337d781408a97665`;
+  merged `2026-08-21T07:56:54Z`.
+- The protected delivery process deleted the remote implementation branch.
+
+## Closure boundary
+
+This governance-only closure changes no adapter, test, snapshot or observed
+repository state.
 
 ## Participants
 
