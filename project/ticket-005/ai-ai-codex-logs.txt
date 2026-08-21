@@ -1,2 +1,4 @@
 2026-08-21T09:21:08Z ticket allocated through project/new-ticket.sh at base 627f05e94213709f7b55667caa322ce54cd7ecce.
 2026-08-21T09:24:00Z live diagnosis: manifest paths with mode 0600 are visible in the non-root container but unreadable; current adapter suppresses OSError and emits governance=false.
+2026-08-21T09:27:00Z regression suite: 16/16 tests pass with PYTHONDONTWRITEBYTECODE=1 and PYTHONPATH=src.
+2026-08-21T09:27:00Z initial exact-base governance rejected incomplete delivery metadata and unknown workstream; corrected to the bounded S/integration contract without bypass.
