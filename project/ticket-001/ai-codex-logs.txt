@@ -8,3 +8,5 @@
 [2026-08-21T07:33:00Z] LIVE READ: GitHub 72 subactor, 40 wellmanifest, 4 uri-twin, 56 semcod, 21 oqlos; 195 unique merged repositories. Control unavailable without secret access and remained fail-closed.
 [2026-08-21T07:36:00Z] SCHEMA/SERVICE: Draft 2020-12 validation PASS; /health acts=false; /v1/next-actions returns digest-bound authority boundary.
 [2026-08-21T07:38:00Z] CONTAINER: pinned Python base built; non-root read-only scan observed all five mounted organization roots without a writable workspace.
+[2026-08-21T07:41:33Z] PUBLICATION: PR #1 approved at exact head b25eead079aa52d1518c258c9ee90c3dcf7ceed2 by Validator run 32459586673, review 4990924981; merged as d60ad68 and remote branch deleted.
+[2026-08-21T07:45:00Z] CLOSURE: ticket moved to DONE/DONE on integrated main; governance-only, no runtime change.
