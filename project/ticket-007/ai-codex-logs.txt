@@ -2,3 +2,5 @@
 2026-08-21T09:49:00Z live set comparison: 20 TWIN-GOVERNANCE-UNREADABLE targets and 20 TWIN-SSOT-INVALID targets; intersection=20, proving duplicate classification of identical permission failures.
 2026-08-21T09:51:00Z regression suite: 19/19 tests pass; exact-base governance: GOV-PASS with zero errors and zero warnings.
 2026-08-21T09:51:00Z hardened image sha256:385153530c2bf14e0a6e953b4bec01ff8539d5b9e833bb85a61ec075f93c5521: governance-unreadable=20, SSOT-invalid=0, SSOT-unreadable=0 for governed manifest targets, intersections=0, total findings=141 offline.
+2026-08-21T09:54:27Z Validator run 32469962427 approved exact head e127a1d4cba98f97d65c57171fe2abf5038f667f as review 4992116274; protected merge 056dfec9e9b4b04fc3abe5ee6305c91898adb3fa completed.
+2026-08-21T09:55:36Z merged live snapshot sha256:0145332898402d791c8b87b5d83c282db65aafc3f6dd581bc83c0d87035b93fa: repositories=173, findings=147, governance-unreadable=20, SSOT-invalid=0, SSOT-unreadable=0, empty-registry=0, observation-failed=0; registry=25, variables=148, evaluations=3.
