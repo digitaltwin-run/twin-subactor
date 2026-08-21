@@ -1,0 +1,46 @@
+{
+  "schema": "new-project.intent/v3",
+  "ticket": "ticket-003",
+  "summary": "Mark anonymous GitHub discovery as partial",
+  "workstream": "integration",
+  "classification": {
+    "kind": "BUG",
+    "priority": "P1",
+    "origin": "regression"
+  },
+  "allowedPaths": ["project/ticket-003/**", "TODO.md", "project/TICKETS.md", "src/twin_subactor/sources.py", "tests/test_twin.py"],
+  "forbiddenPaths": ["project/ticket-*/user-*.md"],
+  "stacks": [],
+  "dependsOn": [],
+  "conflictsWith": [],
+  "integrationTicket": null,
+  "delivery": {
+    "acceptedBaseSha": "10b01d29d157d3949c1c0d755eef8a6861f04fff",
+    "targetBranch": "main",
+    "outcome": "Prevent anonymous GitHub discovery from claiming complete remote organization health.",
+    "nonGoals": [
+      "No credential creation, lookup or logging",
+      "No change to local repository discovery",
+      "No remote mutation",
+      "No repair authority"
+    ],
+    "complexity": "XS",
+    "estimatedMinutes": 10,
+    "budgets": {"maxImplementationFiles": 2, "maxAffectedComponents": 1, "maxPublicInterfaceChanges": 0, "maxRuntimeDependencies": 0},
+    "architecture": {
+      "status": "accepted",
+      "decision": "Annotate successful HTTP observations without GITHUB_TOKEN as partial/public-only; retain healthy only for authenticated HTTP or the authenticated gh boundary.",
+      "components": [{"name": "source-adapters", "paths": ["src/twin_subactor/sources.py", "tests/test_twin.py"]}],
+      "responsibilityChanges": false,
+      "interfaceChanges": [],
+      "dataChanges": [],
+      "ui": {"impact": "none", "states": [], "evidence": []},
+      "rollback": "Revert remote receipt scope classification and its tests"
+    },
+    "runtimeDependencies": [],
+    "validation": [
+      {"criterion": "AC-01", "commands": ["python -m unittest discover -s tests -v"], "evidence": "Anonymous and authenticated discovery receipts have distinct health"},
+      {"criterion": "AC-04", "commands": ["./project/governance-check.sh --actor agent --base 10b01d29d157d3949c1c0d755eef8a6861f04fff --head HEAD"], "evidence": "Exact scope passes governance"}
+    ]
+  }
+}
