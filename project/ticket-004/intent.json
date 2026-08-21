@@ -58,7 +58,7 @@
       {
         "criterion": "AC-04",
         "commands": [
-          "python -m unittest discover -s tests -v",
+          "PYTHONPATH=src python -m unittest discover -s tests -v",
           "./project/governance-check.sh --actor agent --base c87ba6ba779f3a78ea788eca9aafc187ef7c2a2a --head HEAD"
         ],
         "evidence": "project/ticket-004/ai-codex-logs.txt"

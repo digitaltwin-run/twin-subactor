@@ -1,0 +1,4 @@
+2026-08-21 TEST unit=PASS passed=13 failed=0
+2026-08-21 TEST compileall=PASS
+2026-08-21 GOVERNANCE base=c87ba6ba779f3a78ea788eca9aafc187ef7c2a2a result=PASS errors=0 warnings=0
+2026-08-21 LIVE core=healthy platform=healthy www-sub-actor=TWIN-WORKTREE-GUARD-NOT-WIRED route=human

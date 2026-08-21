@@ -22,6 +22,10 @@ runner is cleaned.
 
 - Initialized the bounded ticket and recorded SESSION_EXECUTION_AUTHORIZATION
   from the request to execute this work.
+- Added the bounded `governanceGuard` repository projection.
+- Added deterministic missing, untracked, unwired and fail-open diagnoses.
+- Excluded the Wellmanifest standard source from adopter-only findings.
+- Verified the detector against unit fixtures and the three live pilots.
 
 ## Blockers
 

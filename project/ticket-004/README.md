@@ -3,7 +3,7 @@
 - **ID**: ticket-004
 - **Owner**: unresolved:human
 - **Status**: IN_PROGRESS
-- **Workflow state**: EDIT
+- **Workflow state**: VALIDATION
 - **Created**: 2026-08-21
 
 ## Goal and scope
@@ -18,12 +18,22 @@ install governance files or grant Repair authority.
 
 ## Acceptance criteria
 
-- [ ] AC-01: A configured fail-open hook produces
+- [x] AC-01: A configured fail-open hook produces
       `TWIN-WORKTREE-GUARD-FAIL-OPEN`.
-- [ ] AC-02: Missing and untracked runners have distinct stable error codes.
-- [ ] AC-03: A complete tracked, wired, fail-closed guard produces no guard
+- [x] AC-02: Missing and untracked runners have distinct stable error codes.
+- [x] AC-03: A complete tracked, wired, fail-closed guard produces no guard
       finding.
-- [ ] AC-04: Unit tests and exact-base governance pass before Validator review.
+- [x] AC-04: Unit tests and exact-base governance pass before Validator review.
+
+## Validation evidence
+
+- 13 unit tests pass, including fail-open, missing, untracked, healthy and
+  standard-source negative cases.
+- Python bytecode compilation passes.
+- Exact-base governance reports zero errors and zero warnings.
+- Live local observation reports `core` and `platform` healthy and classifies
+  `www-sub-actor` as `TWIN-WORKTREE-GUARD-NOT-WIRED`; because that checkout is
+  dirty, the finding routes to human rather than inventing repair authority.
 
 ## Authorization
 
