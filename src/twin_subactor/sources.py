@@ -96,7 +96,9 @@ def _carrier(repo: Path, relative: str) -> dict[str, Any] | None:
             if isinstance(parsed, dict):
                 result["schema"] = parsed.get("schema") or parsed.get("$schema")
         return result
-    except (OSError, ValueError, json.JSONDecodeError) as error:
+    except OSError as error:
+        return {"path": relative, "status": "unreadable", "error": type(error).__name__}
+    except (ValueError, json.JSONDecodeError) as error:
         return {"path": relative, "status": "invalid", "error": type(error).__name__}
 
 

@@ -129,7 +129,12 @@ def diagnose(snapshot: dict[str, Any], config: dict[str, Any]) -> list[dict[str,
                     route="doctor-agent",
                 )
             )
-        invalid_carriers = [item["path"] for item in repo.get("ssotCarriers", []) if item.get("status") == "invalid"]
+        governance_owned_path = governance_carrier.get("path") if governance_status in {"invalid", "unreadable"} else None
+        invalid_carriers = [
+            item["path"]
+            for item in repo.get("ssotCarriers", [])
+            if item.get("status") == "invalid" and item.get("path") != governance_owned_path
+        ]
         if invalid_carriers:
             findings.append(
                 _finding(
@@ -137,6 +142,22 @@ def diagnose(snapshot: dict[str, Any], config: dict[str, Any]) -> list[dict[str,
                     "error",
                     f"repo:{repo['id']}",
                     {"invalidCarriers": invalid_carriers},
+                    repairability="diagnosis-required",
+                    route="doctor-agent",
+                )
+            )
+        unreadable_carriers = [
+            item["path"]
+            for item in repo.get("ssotCarriers", [])
+            if item.get("status") == "unreadable" and item.get("path") != governance_owned_path
+        ]
+        if unreadable_carriers:
+            findings.append(
+                _finding(
+                    "TWIN-SSOT-UNREADABLE",
+                    "error",
+                    f"repo:{repo['id']}",
+                    {"unreadableCarriers": unreadable_carriers},
                     repairability="diagnosis-required",
                     route="doctor-agent",
                 )
