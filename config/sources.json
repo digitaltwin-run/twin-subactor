@@ -1,0 +1,67 @@
+{
+  "schema": "twin-subactor.sources/v1",
+  "maxRepositories": 500,
+  "maxTicketsPerRepository": 300,
+  "expectedGovernanceStandard": "0.18.1",
+  "organizations": [
+    {
+      "id": "subactor",
+      "required": true,
+      "governanceExpected": true,
+      "role": "runtime-and-product-source",
+      "localRoot": {"env": "SUBACTOR_REPOSITORIES_ROOT", "default": "workspace://subactor"},
+      "ssotCarriers": [".governance/manifest.json", "dsl-manifest.json", "docs/dsl-manifest.json", "project/TICKETS.md", "VERSION"]
+    },
+    {
+      "id": "wellmanifest",
+      "required": true,
+      "governanceExpected": true,
+      "role": "domain-standard-source",
+      "localRoot": {"env": "WELLMANIFEST_REPOSITORIES_ROOT", "default": "workspace://wellmanifest"},
+      "ssotCarriers": [".governance/manifest.json", "dsl-manifest.json", "docs/dsl-manifest.json", "standard/manifest.json", "project/TICKETS.md", "VERSION"]
+    },
+    {
+      "id": "uri-twin",
+      "required": false,
+      "governanceExpected": false,
+      "role": "infrastructure-observation-source",
+      "localRoot": {"env": "URI_TWIN_REPOSITORIES_ROOT", "default": "workspace://uri-twin"},
+      "ssotCarriers": [".governance/manifest.json", "dsl-manifest.json", "project/TICKETS.md", "VERSION"]
+    },
+    {
+      "id": "semcod",
+      "required": false,
+      "governanceExpected": false,
+      "role": "intent-and-code-evidence-tool-source",
+      "localRoot": {"env": "SEMCOD_REPOSITORIES_ROOT", "default": "workspace://semcod"},
+      "ssotCarriers": [".governance/manifest.json", "dsl-manifest.json", "project/TICKETS.md", "VERSION"]
+    },
+    {
+      "id": "oqlos",
+      "required": false,
+      "governanceExpected": false,
+      "role": "typed-query-language-source",
+      "localRoot": {"env": "OQLOS_REPOSITORIES_ROOT", "default": "workspace://oqlos"},
+      "ssotCarriers": [".governance/manifest.json", "dsl-manifest.json", "project/TICKETS.md", "VERSION"]
+    }
+  ],
+  "control": {
+    "required": true,
+    "baseUrlEnv": "SUBACTOR_CONTROL_URL",
+    "defaultBaseUrl": "http://127.0.0.1:8091",
+    "tokenEnv": "SUBACTOR_ADMIN_TOKEN",
+    "timeoutSeconds": 8,
+    "maxResponseBytes": 2097152,
+    "endpoints": [
+      {"id": "system-context", "path": "/api/digital-twin/system-context?format=json"},
+      {"id": "system-state", "path": "/api/digital-twin/system-state"}
+    ]
+  },
+  "decision": {
+    "policyRef": "priority://wellmanifest.com/deterministic-first/v1",
+    "lifecycleRef": "lifecycle://wellmanifest.com/service-observe-repair/v1",
+    "doctorSkillRef": "skills://subactor/diagnostics/v1",
+    "repairProcessRef": "skills://subactor/processes/repair.v1",
+    "validatorProcessRef": "skills://subactor/processes/validation.v1"
+  }
+}

@@ -31,6 +31,14 @@ Validator independently accepts an exact result.
 - Classified the repository as `HOME subactor`, `SHAPE runtime_service`, with
   Wellmanifest packs adopted as standards rather than runtime ownership.
 - Kept the controller and mutation boundary outside this Twin.
+- Added dynamic remote/local discovery for five organizations, bounded SSOT
+  carrier parsing and authenticated Control read-model adapters.
+- Added content-addressed snapshots, deterministic findings, stable
+  deduplication keys and priority-ordered, authority-safe handoff candidates.
+- Added CLI snapshot/diagnose/recommend/watch commands, a cached read-only HTTP
+  service, JSON Schema, unit tests, CI and a non-root container image with Git.
+- Proved the container can scan all five mounted organization roots read-only;
+  Platform integration is tracked independently as ticket-045.
 
 ## Blockers
 
