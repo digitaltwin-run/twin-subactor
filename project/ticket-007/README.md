@@ -2,8 +2,8 @@
 
 - **ID**: ticket-007
 - **Owner**: unresolved:human
-- **Status**: IN_PROGRESS
-- **Workflow state**: PUBLICATION
+- **Status**: DONE
+- **Workflow state**: DONE
 - **Created**: 2026-08-21
 
 ## Goal and scope
@@ -25,7 +25,7 @@ failed bounded parsing.
 - [x] AC-03: A distinct unreadable SSOT carrier produces a stable Doctor finding.
 - [x] AC-04: Invalid readable content remains `TWIN-SSOT-INVALID`.
 - [x] AC-05: Unit, governance and hardened live deduplication checks pass.
-- [ ] AC-06: Exact-head Validator performs protected publication.
+- [x] AC-06: Exact-head Validator performs protected publication.
 
 ## Validation evidence
 
@@ -37,6 +37,29 @@ failed bounded parsing.
   generic SSOT-unreadable findings for the owned manifest paths and zero target
   intersections. Finding total fell from the duplicate-inflated shape without
   changing observed files.
+
+## Publication evidence
+
+- Pull request: `subactor/twin-subactor#13`.
+- Frozen and approved head: `e127a1d4cba98f97d65c57171fe2abf5038f667f`.
+- Hosted CI and governance checks passed on the frozen head.
+- Validator run: `32469962427`; review: `4992116274`.
+- Merge commit: `056dfec9e9b4b04fc3abe5ee6305c91898adb3fa`;
+  merged `2026-08-21T09:54:27Z`.
+
+## Integrated live evidence
+
+The read-only service was rebuilt from merged commit `056dfec`. Snapshot
+`sha256:0145332898402d791c8b87b5d83c282db65aafc3f6dd581bc83c0d87035b93fa`
+observes 173 repositories and 147 findings: 20 governance-unreadable, zero
+SSOT-invalid duplicates, zero generic SSOT-unreadable duplicates, zero empty
+registry and zero repository-observation failures. Registry parity remains
+25 entries, 148 state variables and three policy evaluations.
+
+## Closure boundary
+
+This governance-only closure records the integrated result. It changes no Twin
+runtime, registry, observed repository or authority boundary.
 
 ## Authorization
 

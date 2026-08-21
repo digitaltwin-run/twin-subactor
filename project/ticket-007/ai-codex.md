@@ -28,6 +28,8 @@ twice and can distort priority ordering.
 - Let the governance-specific diagnosis own its manifest path.
 - Preserved a generic Doctor route for other unreadable SSOT carriers.
 - Proved zero duplicate targets in the hardened live scan.
+- Validator approved the frozen exact head and performed protected delivery.
+- Rebuilt merged Twin and confirmed the public finding count fell from 167 to 147.
 
 ## Blockers
 
