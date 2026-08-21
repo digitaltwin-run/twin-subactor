@@ -24,6 +24,12 @@ otherwise healthy repository projection.
 
 - Initialized the bounded ticket and recorded SESSION_EXECUTION_AUTHORIZATION
   from the request to execute this work.
+- Added a bounded, non-throwing VERSION reader that preserves short scalar
+  values and extracts an explicit semantic version from document text.
+- Added regressions proving that both parseable and unparseable document forms
+  retain the repository projection.
+- Re-ran the real local ecosystem scan and eliminated the sole repository
+  observation failure without changing the target repository.
 
 ## Blockers
 

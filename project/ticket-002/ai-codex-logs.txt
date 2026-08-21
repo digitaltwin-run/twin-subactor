@@ -1,0 +1,18 @@
+2026-08-21T07:50:30Z live-diagnosis
+TARGET=repo:subactor/intent-contract-dsl-runtime
+FINDING=TWIN-REPOSITORY-OBSERVATION-FAILED
+CAUSE=VERSION is a 3726-byte bounded Markdown document; adapter imposed a 128-byte scalar limit and failed the entire repository observation.
+TARGET_MUTATION=none
+
+2026-08-21T07:52:00Z focused-validation
+$ PYTHONPATH=src python3 -m unittest discover -s tests -v
+PASS: 8 tests, 8 passed, 0 failed.
+$ twin-subactor --offline snapshot
+PASS: repositories=171; subactor local source=healthy; target version=0.12.0;
+TWIN-REPOSITORY-OBSERVATION-FAILED=0; findings=138.
+$ docker run --read-only --user 10001:10001 --cap-drop ALL <ticket-002 image> --offline snapshot
+PASS: 171 repositories; required Subactor source healthy; target version=0.12.0;
+observation failures=0 under the production hardening boundary.
+
+2026-08-21T07:52:30Z publication-state
+WORKFLOW=IN_PROGRESS/PUBLICATION

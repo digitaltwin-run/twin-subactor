@@ -3,7 +3,7 @@
 - **ID**: ticket-002
 - **Owner**: unresolved:human
 - **Status**: IN_PROGRESS
-- **Workflow state**: EDIT
+- **Workflow state**: PUBLICATION
 - **Created**: 2026-08-21
 
 ## Goal and scope
@@ -15,13 +15,23 @@ because the carrier is document-shaped or has no parseable scalar.
 
 ## Acceptance criteria
 
-- [ ] AC-01: A bounded document-shaped `VERSION` yields its explicit semantic
+- [x] AC-01: A bounded document-shaped `VERSION` yields its explicit semantic
   version without failing repository observation.
-- [ ] AC-02: An unparseable but bounded `VERSION` yields no declared version
+- [x] AC-02: An unparseable but bounded `VERSION` yields no declared version
   while preserving Git, carrier and ticket evidence for the repository.
-- [ ] AC-03: The regression test reproduces the observed
+- [x] AC-03: The regression test reproduces the observed
   `intent-contract-dsl-runtime` carrier shape without reading that repo during CI.
-- [ ] AC-04: Unit tests and governance pass before exact-head publication.
+- [x] AC-04: Unit tests and governance pass before exact-head publication.
+
+## Validation evidence
+
+- Eight unit tests pass, including document-shaped and unparseable VERSION
+  carriers.
+- The live local snapshot now reports the required Subactor source `healthy`,
+  observes 171 repositories, extracts `0.12.0` for the original target and
+  emits zero `TWIN-REPOSITORY-OBSERVATION-FAILED` findings.
+- The repair changes only the source adapter and its regression tests; it does
+  not mutate the observed repository or widen authority.
 
 ## Participants
 

@@ -6,3 +6,5 @@
 - No human participant identity or content was generated.
 - Recorded the live `TWIN-REPOSITORY-OBSERVATION-FAILED` regression and bounded
   the repair to VERSION parsing in the source adapter.
+- Preserved complete repository observations for document-shaped VERSION files
+  and added parseable/unparseable regression coverage.
