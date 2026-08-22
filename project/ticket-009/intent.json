@@ -11,7 +11,7 @@
   "allowedPaths": [
     "README.md",
     "TODO.md",
-    "examples/**",
+    "docs/**",
     "project/ticket-009/**",
     "project/TICKETS.md",
     "schemas/**",
@@ -47,7 +47,7 @@
       "status": "accepted",
       "decision": "Keep purpose-conditioned next-process prediction in the read-only Twin. Consume only an accepted typed purpose, select from deterministic next actions, emit a non-executable projection URI and leave exact runtime URI binding, grants, execution, EQL and rollback to Control and its agents.",
       "components": [
-        {"name": "purpose-and-token-contracts", "paths": ["schemas/**", "examples/**"]},
+        {"name": "purpose-and-token-contracts", "paths": ["schemas/**", "docs/examples/**"]},
         {"name": "evolution-projection", "paths": ["src/twin_subactor/evolution.py", "src/twin_subactor/cli.py"]},
         {"name": "operator-evidence", "paths": ["README.md", "tests/test_evolution.py"]}
       ],
@@ -66,7 +66,7 @@
         "criterion": "AC-01",
         "commands": [
           "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python -m unittest discover -s tests -v",
-          "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python -m twin_subactor.cli --offline evolve --purpose examples/subactor-purpose.v1.json --once",
+          "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python -m twin_subactor.cli --offline evolve --purpose docs/examples/subactor-purpose.v1.json --once",
           "./project/governance-check.sh --actor agent --base f662be1d71ec2b6008f75f55d0a8f6cb78853d08 --head HEAD"
         ],
         "evidence": "project/ticket-009/ai-codex-logs.txt"

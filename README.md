@@ -18,8 +18,23 @@ twin-subactor snapshot
 twin-subactor diagnose
 twin-subactor recommend
 twin-subactor watch --interval 15
+twin-subactor --offline evolve --purpose docs/examples/subactor-purpose.v1.json --once
 twin-subactor serve --host 127.0.0.1 --port 8188
 ```
+
+`evolve` treats an accepted existential-purpose DSL as durable context and
+emits one hash-chained next-process token whenever the Twin decision changes.
+Without `--once` it remains alive but does not emit a busy-loop stream while
+the snapshot is unchanged. The example purpose preserves the original NL and
+its accepted typed constraints.
+
+The token's `projectionUri` addresses a read-only Twin transition. It is not an
+executable connector URI. `runtimeBinding.status` remains
+`requires-control-catalog-binding` until Control resolves an allowed capability
+to an exact registered URI. The chain is deliberately split into NL → accepted
+DSL, environment → DOQL/Twin facts, deterministic selection, catalog binding,
+AQL/grant, execution and independent EQL/receipt. Twin never performs the last
+four steps.
 
 `--offline` disables GitHub and Control reads while retaining local discovery.
 Organization roots can be overridden with the environment names in

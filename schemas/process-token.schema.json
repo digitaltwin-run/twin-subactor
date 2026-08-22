@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.subactor.com/twin-subactor/process-token/v1",
+  "title": "twin-subactor.process-token/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "sequence", "purposeDigest", "snapshotDigest", "previousTokenDigest", "decisionDigest", "decision", "adapterChain", "runtimeBinding", "authority", "eql", "rollback", "continuation", "tokenDigest"],
+  "properties": {
+    "schema": {"const": "twin-subactor.process-token/v1"},
+    "sequence": {"type": "integer", "minimum": 0},
+    "purposeDigest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "snapshotDigest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "previousTokenDigest": {"type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$"},
+    "decisionDigest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "decision": {"type": "object"},
+    "adapterChain": {"type": "array", "minItems": 6},
+    "runtimeBinding": {"type": "object"},
+    "authority": {"type": "object"},
+    "eql": {"type": "object"},
+    "rollback": {"type": "object"},
+    "continuation": {"type": "object"},
+    "tokenDigest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+  }
+}
