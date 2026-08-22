@@ -49,7 +49,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     purpose = load_purpose(args.purpose) if args.command == "evolve" else None
     previous = None
-    previous_token_digest = None
+    previous_process_digest = None
     emitted = 0
     while True:
         snapshot = build_snapshot(args.config, offline=args.offline)
@@ -60,16 +60,16 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "recommend":
             _emit({"snapshotDigest": snapshot["snapshotDigest"], "nextActions": snapshot["nextActions"]})
         elif args.command == "evolve":
-            token = next_process_token(
+            process_record = next_process_token(
                 snapshot,
                 purpose,
                 sequence=emitted,
-                previous_token_digest=previous_token_digest,
+                previous_token_digest=previous_process_digest,
             )
-            if token["decisionDigest"] != previous:
-                _emit(token)
-                previous = token["decisionDigest"]
-                previous_token_digest = token["tokenDigest"]
+            if process_record["decisionDigest"] != previous:
+                _emit(process_record)
+                previous = process_record["decisionDigest"]
+                previous_process_digest = process_record["tokenDigest"]
                 emitted += 1
         elif snapshot["snapshotDigest"] != previous:
             _emit(

@@ -44,29 +44,29 @@ class EvolutionTests(unittest.TestCase):
         self.assertIsNone(first["runtimeBinding"]["executableUri"])
 
     def test_human_route_becomes_founder_interaction(self) -> None:
-        token = next_process_token(self.snapshot([action(route="human")]), self.purpose)
+        process_record = next_process_token(self.snapshot([action(route="human")]), self.purpose)
 
-        self.assertEqual(token["decision"]["phase"], "interaction")
-        self.assertEqual(token["decision"]["operation"], "request-founder-decision")
-        self.assertTrue(token["decision"]["projectionUri"].startswith("twin-subactor://evolution/ask-founder/"))
-        self.assertEqual(token["runtimeBinding"]["status"], "not-bound")
+        self.assertEqual(process_record["decision"]["phase"], "interaction")
+        self.assertEqual(process_record["decision"]["operation"], "request-founder-decision")
+        self.assertTrue(process_record["decision"]["projectionUri"].startswith("twin-subactor://evolution/ask-founder/"))
+        self.assertEqual(process_record["runtimeBinding"]["status"], "not-bound")
 
     def test_no_eligible_action_waits_for_context_change(self) -> None:
-        token = next_process_token(self.snapshot([action(target="repo:oqlos/example")]), self.purpose)
+        process_record = next_process_token(self.snapshot([action(target="repo:oqlos/example")]), self.purpose)
 
-        self.assertEqual(token["decision"]["operation"], "wait-for-context-change")
-        self.assertEqual(token["decision"]["candidateCount"], 0)
-        self.assertFalse(token["continuation"]["busyLoopAllowed"])
+        self.assertEqual(process_record["decision"]["operation"], "wait-for-context-change")
+        self.assertEqual(process_record["decision"]["candidateCount"], 0)
+        self.assertFalse(process_record["continuation"]["busyLoopAllowed"])
 
     def test_direct_nl_to_uri_is_explicitly_forbidden(self) -> None:
-        token = next_process_token(self.snapshot([action()]), self.purpose)
-        adapters = {item["adapter"]: item for item in token["adapterChain"]}
+        process_record = next_process_token(self.snapshot([action()]), self.purpose)
+        adapters = {item["adapter"]: item for item in process_record["adapterChain"]}
 
         self.assertEqual(adapters["nl2uri"]["state"], "forbidden-direct")
-        self.assertEqual(token["runtimeBinding"]["status"], "requires-control-catalog-binding")
+        self.assertEqual(process_record["runtimeBinding"]["status"], "requires-control-catalog-binding")
 
     def test_accepted_purpose_order_breaks_only_equal_priority_ties(self) -> None:
-        token = next_process_token(
+        process_record = next_process_token(
             self.snapshot([
                 action(target="repo:semcod/pyqual", score=80),
                 action(target="repo:subactor/core", score=80),
@@ -75,7 +75,7 @@ class EvolutionTests(unittest.TestCase):
             self.purpose,
         )
 
-        self.assertEqual(token["decision"]["selectedAction"]["targetRef"], "repo:wellmanifest/skills")
+        self.assertEqual(process_record["decision"]["selectedAction"]["targetRef"], "repo:wellmanifest/skills")
         without_higher_system_priority = next_process_token(
             self.snapshot([
                 action(target="repo:semcod/pyqual", score=80),
