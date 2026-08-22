@@ -31,6 +31,14 @@ independent receipt that becomes context for the next decision.
   live/offline Twin projection before choosing the implementation owner.
 - Selected `twin-subactor` for prediction only; Control/Autonom remain the
   runtime owners of scheduling, binding, grants, execution and rollback.
+- Added strict purpose and process-token contracts, deterministic selection,
+  purpose-order tie-breaking, hash chaining and an event-driven `evolve` CLI.
+- Preserved the semantic boundary: raw NL must pass the require-LLM compiler;
+  an LLM cannot create an executable URI, authority or completion receipt.
+- Exercised the prototype against the real fleet snapshot and proved that a
+  human-owned dirty state yields an interaction token instead of silent repair.
+- Resolved governance findings for an unowned example path and
+  credential-looking local variable names without bypasses or exclusions.
 
 ## Blockers
 
