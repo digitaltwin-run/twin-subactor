@@ -2,8 +2,8 @@
 
 - **ID**: ticket-009
 - **Owner**: unresolved:human
-- **Status**: IN_PROGRESS
-- **Workflow state**: PUBLICATION
+- **Status**: DONE
+- **Workflow state**: DONE
 - **Created**: 2026-08-22
 
 ## Goal and scope
@@ -59,6 +59,20 @@ a governed handoff, but cannot itself execute a mutation.
 The user's request to analyze the ecosystem and build the bounded organism
 prototype is `SESSION_EXECUTION_AUTHORIZATION`. It does not authorize Twin to
 execute a mutation, invent an exact runtime URI or approve its own result.
+
+## Publication evidence
+
+- Pull request: `subactor/twin-subactor#17`.
+- Frozen and approved head: `80893046c627928bff49ddf5593d26e57f2840b0`.
+- Trusted review: `ifuri-validator-agent[bot]`, exact-head `APPROVED`.
+- Validator run: `subactor/validator-agent/actions/runs/32569849904`.
+- Merge commit: `940fb7505dbe8c5d07ca94fc01551e9d760bce0f`.
+
+## Closure boundary
+
+This governance-only closure is based on the integrated default branch. It
+changes no purpose contract, process projection, runtime binding or observed
+ecosystem state.
 
 ## Participants
 

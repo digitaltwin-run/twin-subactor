@@ -39,6 +39,8 @@ independent receipt that becomes context for the next decision.
   human-owned dirty state yields an interaction token instead of silent repair.
 - Resolved governance findings for an unowned example path and
   credential-looking local variable names without bypasses or exclusions.
+- Published through PR #17; the protected Validator approved the exact frozen
+  head and merged it before this governance-only closure.
 
 ## Blockers
 
