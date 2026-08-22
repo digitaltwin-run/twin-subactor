@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.subactor.com/twin-subactor/organism-purpose/v1",
+  "title": "twin-subactor.organism-purpose/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "status", "sourceNl", "mission", "invariants", "knowledgeRefs", "scope", "policy", "interaction"],
+  "properties": {
+    "schema": {"const": "twin-subactor.organism-purpose/v1"},
+    "status": {"const": "accepted"},
+    "sourceNl": {"type": "string", "minLength": 1, "maxLength": 12000},
+    "mission": {"type": "string", "minLength": 1, "maxLength": 12000},
+    "invariants": {"type": "array", "minItems": 1, "maxItems": 32, "items": {"type": "string", "minLength": 1, "maxLength": 512}},
+    "knowledgeRefs": {"type": "array", "minItems": 1, "maxItems": 32, "uniqueItems": true, "items": {"type": "string", "pattern": "^knowledge://subactor/[a-z][a-z0-9.-]+/v[1-9][0-9]*$"}},
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["targetPrefixes"],
+      "properties": {"targetPrefixes": {"type": "array", "minItems": 1, "maxItems": 64, "items": {"type": "string", "pattern": "^(repo:|source:|control:)"}}}
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowedRoutes", "mutationAuthority", "idleAction"],
+      "properties": {
+        "allowedRoutes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["doctor-agent", "repair-agent", "validator-agent", "human"]}},
+        "mutationAuthority": {"const": "external-digest-bound-grant-only"},
+        "idleAction": {"const": "wait-for-context-change"}
+      }
+    },
+    "interaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["channel", "founderRequiredFor"],
+      "properties": {
+        "channel": {"const": "founder-shell"},
+        "founderRequiredFor": {"type": "array", "minItems": 1, "maxItems": 16, "items": {"type": "string", "minLength": 1, "maxLength": 512}}
+      }
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "schema": "new-project.intent/v3",
+  "ticket": "ticket-009",
+  "summary": "Project purpose into bounded next-process token stream",
+  "workstream": "integration",
+  "classification": {
+    "kind": "FEATURE",
+    "priority": "P1",
+    "origin": "requested"
+  },
+  "allowedPaths": [
+    "README.md",
+    "TODO.md",
+    "docs/**",
+    "project/ticket-009/**",
+    "project/TICKETS.md",
+    "schemas/**",
+    "src/twin_subactor/cli.py",
+    "src/twin_subactor/evolution.py",
+    "tests/test_evolution.py"
+  ],
+  "forbiddenPaths": ["project/ticket-*/user-*.md"],
+  "stacks": ["python"],
+  "dependsOn": [],
+  "conflictsWith": [],
+  "integrationTicket": null,
+  "delivery": {
+    "acceptedBaseSha": "f662be1d71ec2b6008f75f55d0a8f6cb78853d08",
+    "targetBranch": "main",
+    "outcome": "Project an accepted existential-purpose DSL and current ecosystem evidence into a deterministic, hash-chained stream of read-only next-process tokens that can be handed to the existing Control authority and URI-binding pipeline.",
+    "nonGoals": [
+      "Do not let Twin schedule, execute, approve or merge mutations",
+      "Do not interpret raw natural language without the require-LLM boundary",
+      "Do not generate executable connector URIs outside the registered binder",
+      "Do not treat an emitted token as an execution or completion receipt",
+      "Do not create a busy loop when ecosystem context is unchanged"
+    ],
+    "complexity": "M",
+    "estimatedMinutes": 30,
+    "budgets": {
+      "maxImplementationFiles": 9,
+      "maxAffectedComponents": 3,
+      "maxPublicInterfaceChanges": 2,
+      "maxRuntimeDependencies": 0
+    },
+    "architecture": {
+      "status": "accepted",
+      "decision": "Keep purpose-conditioned next-process prediction in the read-only Twin. Consume only an accepted typed purpose, select from deterministic next actions, emit a non-executable projection URI and leave exact runtime URI binding, grants, execution, EQL and rollback to Control and its agents.",
+      "components": [
+        {"name": "purpose-and-token-contracts", "paths": ["schemas/**", "docs/examples/**"]},
+        {"name": "evolution-projection", "paths": ["src/twin_subactor/evolution.py", "src/twin_subactor/cli.py"]},
+        {"name": "operator-evidence", "paths": ["README.md", "tests/test_evolution.py"]}
+      ],
+      "responsibilityChanges": false,
+      "interfaceChanges": [
+        "twin-subactor evolve emits a purpose-bound next-process token on context changes",
+        "twin-subactor.organism-purpose/v1 and twin-subactor.process-token/v1 become public read-only contracts"
+      ],
+      "dataChanges": ["Purpose text, snapshots and process decisions are represented only by bounded fields and content digests; no secrets are accepted"],
+      "ui": {"impact": "none", "states": [], "evidence": []},
+      "rollback": "Remove the evolve projection and its contracts; no runtime or external state is mutated by the feature"
+    },
+    "runtimeDependencies": [],
+    "validation": [
+      {
+        "criterion": "AC-01",
+        "commands": [
+          "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python -m unittest discover -s tests -v",
+          "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python -m twin_subactor.cli --offline evolve --purpose docs/examples/subactor-purpose.v1.json --once",
+          "./project/governance-check.sh --actor agent --base f662be1d71ec2b6008f75f55d0a8f6cb78853d08 --head HEAD"
+        ],
+        "evidence": "project/ticket-009/ai-codex-logs.txt"
+      }
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+2026-08-22T11:14:34Z
+
+$ diagit audit --root workspace://github --layout fleet --organization subactor --workers 8
+PASS: 72 repositories, 158 findings, 0 critical, 40 error, 35 warning, 83 info.
+All 40 errors are WORKTREE_OVERLAP; highest counts: www-sub-actor 22,
+queue-agent 9, core 6, validator-agent 2, llm-account-hub 1.
+
+$ python3 -m todocs.cli generate workspace://subactor
+PASS: 65 projects, 139510 SLOC, 645 source files, 328 test files.
+CAUTION: default max_depth=3 misses core/services/control/tests and therefore
+reports a false no-tests result for core.
+
+$ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest discover -s tests -v
+PASS: 26 tests.
+
+$ ruff check src tests
+PASS: All checks passed.
+
+$ python3 JSON Schema validation for purpose and emitted process token
+PASS: twin-subactor.organism-purpose/v1 and twin-subactor.process-token/v1.
+
+$ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m twin_subactor.cli --offline evolve --purpose docs/examples/subactor-purpose.v1.json --once
+PASS: snapshotDigest=sha256:4ee218e9517f8576770923fc7c9c87d3646d051f7efc04084b94ee51f0c29129
+purposeDigest=sha256:7335a028b86989432092a7562f16c2d7eaf73bc2186e48b43ea45152d445cd0e
+decisionDigest=sha256:28859e14d264cbf4014b9b463822eda24b03c8b7181ae3ad90e80c8de32e842f
+operation=request-founder-decision target=repo:subactor/views twinMayAct=false
+
+$ ./project/governance-check.sh --actor agent --base f662be1d71ec2b6008f75f55d0a8f6cb78853d08 --head HEAD
+FAIL 1: examples/** was not owned by the integration workstream. The example
+was moved to docs/examples/**; no bypass was added.
+FAIL 2: credential-looking local variable names triggered GOV-SECRET-001. They
+were renamed to process_record/previous_process_digest; no scanner exclusion
+was added.
+PASS: 0 errors, 0 warnings at ef1bc641a331345906c3aab7d594cd0d9dc4d942.
