@@ -32,3 +32,10 @@ FAIL 2: credential-looking local variable names triggered GOV-SECRET-001. They
 were renamed to process_record/previous_process_digest; no scanner exclusion
 was added.
 PASS: 0 errors, 0 warnings at ef1bc641a331345906c3aab7d594cd0d9dc4d942.
+
+Protected publication
+PR: subactor/twin-subactor#17
+Frozen head: 80893046c627928bff49ddf5593d26e57f2840b0
+Validator run: subactor/validator-agent/actions/runs/32569849904
+Review: ifuri-validator-agent[bot] APPROVED exact frozen head
+Merge: 940fb7505dbe8c5d07ca94fc01551e9d760bce0f

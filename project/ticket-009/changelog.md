@@ -9,3 +9,4 @@
   event-driven `twin-subactor evolve` CLI.
 - Added a Subactor existential-purpose example and regression tests for safe
   interaction, wait, URI binding and authority boundaries.
+- Closed the ticket after exact-head Validator approval and protected merge.
