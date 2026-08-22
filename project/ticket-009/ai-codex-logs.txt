@@ -1,11 +1,11 @@
 2026-08-22T11:14:34Z
 
-$ diagit audit --root /home/tom/github --layout fleet --organization subactor --workers 8
+$ diagit audit --root workspace://github --layout fleet --organization subactor --workers 8
 PASS: 72 repositories, 158 findings, 0 critical, 40 error, 35 warning, 83 info.
 All 40 errors are WORKTREE_OVERLAP; highest counts: www-sub-actor 22,
 queue-agent 9, core 6, validator-agent 2, llm-account-hub 1.
 
-$ python3 -m todocs.cli generate /home/tom/github/subactor
+$ python3 -m todocs.cli generate workspace://subactor
 PASS: 65 projects, 139510 SLOC, 645 source files, 328 test files.
 CAUTION: default max_depth=3 misses core/services/control/tests and therefore
 reports a false no-tests result for core.
