@@ -2,6 +2,8 @@
 
 ## Active
 
+- [ ] `ticket-010` — add the account-scoped SQLite Twin projection and bounded
+  query adapters. Status: `IN_PROGRESS / PUBLICATION`.
 - [x] `ticket-009` — project an accepted existential purpose into a bounded,
   hash-chained next-process token stream. Status: `DONE / DONE`.
 - [x] `ticket-008` — add Autogrammar as a read-only grammar and DSL source.

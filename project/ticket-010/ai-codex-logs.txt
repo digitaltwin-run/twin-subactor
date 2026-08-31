@@ -1,0 +1,2 @@
+Bounded validation digest (2026-08-31): unittest=32-pass; schema=pass;
+container=pass; urirun-registry=10-routes/0-failures; end-to-end=pass.
