@@ -1,0 +1,91 @@
+{
+  "schema": "new-project.intent/v3",
+  "ticket": "ticket-010",
+  "summary": "Build account-scoped SQLite Digital Twin and URI connector",
+  "workstream": "integration",
+  "classification": {
+    "kind": "SERVICE",
+    "priority": "P1",
+    "origin": "requested"
+  },
+  "allowedPaths": [
+    "CHANGELOG.md",
+    "Dockerfile",
+    "README.md",
+    "TODO.md",
+    "VERSION",
+    "config/sources.json",
+    "project/ticket-010/**",
+    "project/TICKETS.md",
+    "pyproject.toml",
+    "schemas/account-snapshot.schema.json",
+    "src/twin_subactor/account.py",
+    "src/twin_subactor/cli.py",
+    "src/twin_subactor/service.py",
+    "src/twin_subactor/sources.py",
+    "tests/test_account.py"
+  ],
+  "forbiddenPaths": ["project/ticket-*/user-*.md"],
+  "stacks": ["python"],
+  "dependsOn": [],
+  "conflictsWith": [],
+  "integrationTicket": null,
+  "placement": {
+    "home": "subactor",
+    "shape": "runtime_service",
+    "runtimeOwner": "subactor",
+    "adopt": [
+      "wellmanifest/new-project",
+      "wellmanifest/dsl",
+      "wellmanifest/logs",
+      "wellmanifest/twin-lifecycle"
+    ]
+  },
+  "delivery": {
+    "acceptedBaseSha": "73034da4a650f934e1a9346b5d2d2f2aee059d4c",
+    "targetBranch": "main",
+    "outcome": "Add the twin-subactor-account profile: one atomically rebuilt, account-scoped SQLite projection over bounded local and API observations, exposed through deterministic CLI and read-only HTTP queries.",
+    "nonGoals": [
+      "Do not replace or copy the operational SQLite stores owned by Planfile, Org Core or account inventory",
+      "Do not persist credentials, authorization headers or secret-shaped API fields",
+      "Do not let the Twin mutate organizations, projects, tickets, repositories or deployments",
+      "Do not treat disabled or unavailable APIs as empty healthy sources"
+    ],
+    "complexity": "L",
+    "estimatedMinutes": 30,
+    "budgets": {
+      "maxImplementationFiles": 15,
+      "maxAffectedComponents": 5,
+      "maxPublicInterfaceChanges": 3,
+      "maxRuntimeDependencies": 0
+    },
+    "architecture": {
+      "status": "accepted",
+      "decision": "Extend the existing ecosystem Twin with one disposable SQLite read projection. Populate it from source APIs and bounded local manifests, swap rebuilt files atomically, and expose fixed query surfaces. Existing domain stores remain authoritative and are never imported as SQLite files.",
+      "components": [
+        {"name": "account-source-contract", "paths": ["config/sources.json", "src/twin_subactor/sources.py"]},
+        {"name": "account-projection", "paths": ["schemas/account-snapshot.schema.json", "src/twin_subactor/account.py"]},
+        {"name": "read-adapters", "paths": ["src/twin_subactor/cli.py", "src/twin_subactor/service.py"]},
+        {"name": "verification", "paths": ["tests/test_account.py"]},
+        {"name": "delivery", "paths": ["CHANGELOG.md", "Dockerfile", "README.md", "VERSION", "pyproject.toml", "project/ticket-010/**", "TODO.md", "project/TICKETS.md"]}
+      ],
+      "responsibilityChanges": false,
+      "interfaceChanges": [
+        "twin-subactor account-rebuild/account-query CLI",
+        "read-only /v1/account/* HTTP resources",
+        "subactor.account-twin.projection/v1 SQLite projection"
+      ],
+      "dataChanges": [
+        "A single rebuildable SQLite file stores redacted API and local-manifest observations with source provenance and content digests"
+      ],
+      "ui": {"impact": "none", "states": [], "evidence": []},
+      "rollback": "Stop account queries and delete the disposable projection file; no operational source database or external resource is changed"
+    },
+    "runtimeDependencies": [],
+    "validation": [
+      {"criterion": "AC-01", "commands": ["python -m unittest discover -s tests -v"], "evidence": "Account projection, atomic rebuild, redaction, query, CLI and service tests pass"},
+      {"criterion": "AC-02", "commands": ["twin-subactor --offline account-rebuild", "twin-subactor account-query summary"], "evidence": "A real local projection contains organizations, repositories and discovered project manifests while API receipts remain explicitly disabled"},
+      {"criterion": "AC-05", "commands": ["./project/governance-check.sh --actor agent --base 73034da4a650f934e1a9346b5d2d2f2aee059d4c --head HEAD"], "evidence": "Governance and stack validation pass on the exact implementation head"}
+    ]
+  }
+}

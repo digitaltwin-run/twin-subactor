@@ -7,6 +7,7 @@ import time
 from pathlib import Path
 from typing import Any
 
+from .account import build_account_projection, default_database, query_account_projection
 from .evolution import load_purpose, next_process_token
 from .model import build_snapshot
 from .service import serve
@@ -23,6 +24,7 @@ def parser() -> argparse.ArgumentParser:
     result = argparse.ArgumentParser(prog="twin-subactor")
     result.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     result.add_argument("--offline", action="store_true", help="disable GitHub and Control observations")
+    result.add_argument("--account-db", type=Path, default=default_database())
     commands = result.add_subparsers(dest="command", required=True)
     commands.add_parser("snapshot")
     commands.add_parser("diagnose")
@@ -39,13 +41,64 @@ def parser() -> argparse.ArgumentParser:
     service.add_argument("--host", default="127.0.0.1")
     service.add_argument("--port", type=int, default=8188)
     service.add_argument("--ttl", type=float, default=15.0)
+    service.add_argument(
+        "--rebuild-account",
+        action="store_true",
+        help="rebuild the account projection once before accepting requests",
+    )
+    commands.add_parser("account-rebuild", help="atomically rebuild the twin-subactor-account SQLite projection")
+    account_query = commands.add_parser("account-query", help="query the local account projection")
+    account_query.add_argument(
+        "resource",
+        choices=[
+            "summary",
+            "sources",
+            "organizations",
+            "repositories",
+            "projects",
+            "tickets",
+            "project-reconciliations",
+            "deployments",
+            "combinations",
+            "entities",
+        ],
+    )
+    account_query.add_argument("--organization", default="")
+    account_query.add_argument("--project", default="")
+    account_query.add_argument("--status", default="")
+    account_query.add_argument("--source", default="")
+    account_query.add_argument("--query", default="")
+    account_query.add_argument("--limit", type=int, default=200)
+    account_query.add_argument("--offset", type=int, default=0)
     return result
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
     if args.command == "serve":
-        serve(args.config, args.host, args.port, args.ttl, args.offline)
+        if args.rebuild_account:
+            build_account_projection(args.config, args.account_db, offline=args.offline)
+        serve(args.config, args.host, args.port, args.ttl, args.offline, args.account_db)
+        return 0
+    if args.command == "account-rebuild":
+        _emit(build_account_projection(args.config, args.account_db, offline=args.offline))
+        return 0
+    if args.command == "account-query":
+        _emit(
+            query_account_projection(
+                args.account_db,
+                args.resource,
+                filters={
+                    "organization": args.organization,
+                    "project": args.project,
+                    "status": args.status,
+                    "source": args.source,
+                    "q": args.query,
+                },
+                limit=args.limit,
+                offset=args.offset,
+            )
+        )
         return 0
     purpose = load_purpose(args.purpose) if args.command == "evolve" else None
     previous = None

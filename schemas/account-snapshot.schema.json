@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://subactor.com/schemas/account-twin-projection.v1.json",
+  "title": "Subactor account Digital Twin projection summary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "profileId",
+    "accountId",
+    "projectionDigest",
+    "rebuiltAt",
+    "complete",
+    "counts",
+    "sourceStatusCounts"
+  ],
+  "properties": {
+    "schema": {"const": "subactor.account-twin.projection/v1"},
+    "profileId": {"const": "twin-subactor-account"},
+    "accountId": {"type": "string", "minLength": 1},
+    "projectionDigest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "rebuiltAt": {"type": "string", "format": "date-time"},
+    "complete": {"type": "boolean"},
+    "counts": {
+      "type": "object",
+      "additionalProperties": {"type": "integer", "minimum": 0}
+    },
+    "sourceStatusCounts": {
+      "type": "object",
+      "additionalProperties": {"type": "integer", "minimum": 0}
+    }
+  }
+}
