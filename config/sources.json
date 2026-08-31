@@ -65,6 +65,93 @@
       {"id": "system-state", "path": "/api/digital-twin/system-state"}
     ]
   },
+  "accountTwin": {
+    "schema": "twin-subactor.account-sources/v1",
+    "profileId": "twin-subactor-account",
+    "accountId": "subactor",
+    "databaseEnv": "TWIN_SUBACTOR_ACCOUNT_DB",
+    "maxProjectManifests": 1000,
+    "localSources": [
+      {
+        "id": "platform-site-resources",
+        "entityType": "project",
+        "organizationId": "subactor",
+        "required": true,
+        "relativePath": "platform/config/site-resources.json",
+        "itemKeys": ["resources"],
+        "idPrefixToStrip": "workspace:",
+        "declaredPathField": "path",
+        "maxResponseBytes": 8388608,
+        "maxRecords": 1000
+      },
+      {
+        "id": "platform-deployment-bindings",
+        "entityType": "deployment-binding",
+        "organizationId": "subactor",
+        "required": true,
+        "relativePath": "platform/config/deployment-bindings/registry.v1.json",
+        "itemKeys": ["bindings"],
+        "maxResponseBytes": 8388608,
+        "maxRecords": 1000
+      }
+    ],
+    "apiSources": [
+      {
+        "id": "control-organizations",
+        "entityType": "organization",
+        "required": true,
+        "baseUrlEnv": "SUBACTOR_CONTROL_URL",
+        "defaultBaseUrl": "http://127.0.0.1:8091",
+        "tokenEnv": "SUBACTOR_ADMIN_TOKEN",
+        "path": "/api/org/organizations?limit=1000",
+        "itemKeys": ["rows", "organizations", "items"],
+        "timeoutSeconds": 8,
+        "maxResponseBytes": 8388608,
+        "maxRecords": 1000
+      },
+      {
+        "id": "control-projects",
+        "entityType": "project",
+        "required": true,
+        "baseUrlEnv": "SUBACTOR_CONTROL_URL",
+        "defaultBaseUrl": "http://127.0.0.1:8091",
+        "tokenEnv": "SUBACTOR_ADMIN_TOKEN",
+        "path": "/api/org/projects?limit=1000",
+        "itemKeys": ["rows", "projects", "items"],
+        "timeoutSeconds": 8,
+        "maxResponseBytes": 8388608,
+        "maxRecords": 1000
+      },
+      {
+        "id": "control-project-reconciliation",
+        "entityType": "project-reconciliation",
+        "required": true,
+        "baseUrlEnv": "SUBACTOR_CONTROL_URL",
+        "defaultBaseUrl": "http://127.0.0.1:8091",
+        "tokenEnv": "SUBACTOR_ADMIN_TOKEN",
+        "path": "/api/projects/reconciliation",
+        "itemKeys": ["projects", "rows", "items"],
+        "timeoutSeconds": 8,
+        "maxResponseBytes": 8388608,
+        "maxRecords": 1000
+      },
+      {
+        "id": "planfile-tickets",
+        "entityType": "ticket",
+        "required": true,
+        "baseUrlEnv": "SUBACTOR_PLANFILE_URL",
+        "defaultBaseUrl": "http://127.0.0.1:8765",
+        "tokenEnv": "SUBACTOR_ADMIN_TOKEN",
+        "path": "/tickets?sprint=all&offset={offset}&limit={limit}&view=full",
+        "itemKeys": ["tickets", "items"],
+        "paginated": true,
+        "pageSize": 1000,
+        "timeoutSeconds": 30,
+        "maxResponseBytes": 16777216,
+        "maxRecords": 100000
+      }
+    ]
+  },
   "decision": {
     "policyRef": "priority://wellmanifest.com/deterministic-first/v1",
     "lifecycleRef": "lifecycle://wellmanifest.com/service-observe-repair/v1",

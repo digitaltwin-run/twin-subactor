@@ -8,6 +8,7 @@ WORKDIR /app
 COPY src /app/src
 COPY config /app/config
 ENV PYTHONPATH=/app/src
+RUN install -d -o 10001 -g 10001 /data
 
 USER 10001:10001
 EXPOSE 8188

@@ -287,7 +287,7 @@ def _workspace_root(repository_root: Path) -> Path:
     return primary_repository.parent.resolve()
 
 
-def _resolve_root(repository_root: Path, source: dict[str, str]) -> Path:
+def resolve_organization_root(repository_root: Path, source: dict[str, str]) -> Path:
     configured = os.environ.get(source["env"], source["default"])
     if configured.startswith("workspace://"):
         organization = configured.removeprefix("workspace://")
@@ -302,18 +302,29 @@ def discover_local(config: dict[str, Any], repository_root: Path) -> tuple[list[
     repositories: list[dict[str, Any]] = []
     remaining = int(config["maxRepositories"])
     for org in config["organizations"]:
-        root = _resolve_root(repository_root, org["localRoot"])
+        root = resolve_organization_root(repository_root, org["localRoot"])
         receipt = {"id": org["id"], "kind": "organization-local", "required": org["required"]}
         if not root.is_dir():
             receipt.update(status="unavailable", error="root-not-found", repositoryCount=0)
             receipts.append(receipt)
             continue
-        candidates = sorted(
-            path for path in root.iterdir()
-            if path.is_dir() and not path.is_symlink() and (path / ".git").exists()
-        )
+        candidates: list[Path] = []
+        discovery_errors = 0
+        try:
+            entries = list(root.iterdir())
+        except OSError:
+            receipt.update(status="unavailable", error="root-unreadable", repositoryCount=0)
+            receipts.append(receipt)
+            continue
+        for path in entries:
+            try:
+                if path.is_dir() and not path.is_symlink() and (path / ".git").exists():
+                    candidates.append(path)
+            except OSError:
+                discovery_errors += 1
+        candidates.sort()
         selected = candidates[:remaining]
-        errors = 0
+        errors = discovery_errors
         for repo in selected:
             try:
                 repositories.append(observe_local_repository(repo, org, int(config["maxTicketsPerRepository"])))
@@ -335,6 +346,7 @@ def discover_local(config: dict[str, Any], repository_root: Path) -> tuple[list[
             status="healthy" if errors == 0 else "partial",
             repositoryCount=len(selected),
             errorCount=errors,
+            unreadableEntryCount=discovery_errors,
             truncated=len(candidates) > len(selected),
         )
         receipts.append(receipt)

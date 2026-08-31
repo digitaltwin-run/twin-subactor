@@ -20,6 +20,10 @@ twin-subactor recommend
 twin-subactor watch --interval 15
 twin-subactor --offline evolve --purpose docs/examples/subactor-purpose.v1.json --once
 twin-subactor serve --host 127.0.0.1 --port 8188
+twin-subactor --offline account-rebuild
+twin-subactor account-query summary
+twin-subactor account-query projects --query wydruk
+twin-subactor account-query combinations --organization subactor
 ```
 
 `evolve` treats an accepted existential-purpose DSL as durable context and
@@ -51,8 +55,34 @@ tooling. Optional `uri-twin` and `oqlos` roots remain infrastructure-observation
 and typed-query sources. These roles classify evidence; they do not grant
 repair, repository-transfer or merge authority.
 
-The service exposes `GET /health`, `/v1/snapshot`, `/v1/diagnoses` and
-`/v1/next-actions`. All endpoints are read-only and return `Cache-Control:
-no-store`.
+## Account Twin
+
+The `twin-subactor-account` profile is one disposable SQLite read projection
+for a Subactor account. It combines configured organizations, repositories,
+bounded `project.manifest.json` discovery, Platform site/deployment registries,
+Control organization/project/reconciliation APIs and the explicit full
+Planfile ticket projection. Every row retains its source and payload digest.
+
+It does not copy, attach or replace existing SQLite databases. Planfile, Org
+Core and account inventory remain authoritative; deleting the account Twin
+database and running `account-rebuild` reconstructs it from those sources. A
+candidate database passes `PRAGMA integrity_check` and is atomically swapped,
+so a failed refresh preserves the last valid projection. Secret-shaped fields
+are redacted, while credential references remain opaque identifiers.
+
+The default database is
+`$XDG_STATE_HOME/twin-subactor/twin-subactor-account.sqlite3` (or the matching
+path under `~/.local/state`). Override it with `TWIN_SUBACTOR_ACCOUNT_DB` or
+`--account-db`. `--offline` still discovers local organizations, repositories,
+active project manifests and bounded legacy manifests; network receipts are
+recorded as `disabled`, not as healthy empty data.
+
+The account HTTP surface is read-only:
+`/v1/account/{summary,sources,organizations,repositories,projects,tickets,deployments,project-reconciliations,combinations,entities}`.
+Use `serve --rebuild-account` to refresh once before the service starts.
+
+The service also exposes `GET /health`, `/v1/snapshot`, `/v1/diagnoses` and
+`/v1/next-actions`. All HTTP endpoints are read-only and return
+`Cache-Control: no-store`.
 
 See [architecture and authority boundaries](docs/ARCHITECTURE.md).
