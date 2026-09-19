@@ -1,0 +1,120 @@
+{
+  "schema": "new-project.intent/v3",
+  "ticket": "ticket-011",
+  "summary": "Adopt Wellmanifest standards 0.20.35 in subactor/twin-subactor",
+  "workstream": "governance",
+  "classification": {
+    "kind": "SERVICE",
+    "priority": "P1",
+    "origin": "requested"
+  },
+  "allowedPaths": [
+    ".aider.conf.yml",
+    ".cursor/**",
+    ".gitattributes",
+    ".githooks/**",
+    ".github/**",
+    ".gitignore",
+    ".governance/**",
+    ".subactor/**",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "GEMINI.md",
+    "project.bat",
+    "project.sh",
+    "project/TICKETS.md",
+    "project/governance-check.*",
+    "project/new-ticket.sh",
+    "project/ticket-011/**",
+    "pyproject.toml",
+    "scripts/**",
+    "wellmanifest_governance.py",
+    "worktree-guard.yaml"
+  ],
+  "forbiddenPaths": [
+    ".env",
+    ".env.*"
+  ],
+  "stacks": [],
+  "dependsOn": [],
+  "conflictsWith": [],
+  "integrationTicket": null,
+  "delivery": {
+    "acceptedBaseSha": "6fa11126924e29248a0b5e5b8c205c49cbc2af44",
+    "targetBranch": "main",
+    "outcome": "Upgrade standard suite to 0.20.35 and configure canonical worktrees standard.",
+    "nonGoals": [
+      "No production logic modifications"
+    ],
+    "complexity": "L",
+    "estimatedMinutes": 45,
+    "standardAdoption": {
+      "sourceRepository": "wellmanifest/new-project",
+      "fromRevision": "16f7aea148a7f979e5c5abdfd4bc112224904d36",
+      "toRevision": "cfaa0bf0ea6b0e7349fed0bb62b5ce15792d687d",
+      "managedTargetTakeovers": [
+        {
+          "path": "AGENTS.md",
+          "baseDigest": "d81f93ec3031809596dd4c2f57feaaa4e3c66bb7e4e442d205078e830075258b"
+        }
+      ]
+    },
+    "budgets": {
+      "maxImplementationFiles": 15,
+      "maxAffectedComponents": 5,
+      "maxPublicInterfaceChanges": 3,
+      "maxRuntimeDependencies": 3
+    },
+    "architecture": {
+      "status": "accepted",
+      "decision": "Upgrade governance standards lock to 0.20.35 and verify conformance.",
+      "components": [
+        {
+          "name": "governance",
+          "paths": [
+            ".aider.conf.yml",
+            ".cursor/**",
+            ".gitattributes",
+            ".githooks/**",
+            ".github/**",
+            ".gitignore",
+            ".governance/**",
+            ".subactor/**",
+            "AGENTS.md",
+            "CLAUDE.md",
+            "GEMINI.md",
+            "project.bat",
+            "project.sh",
+            "project/TICKETS.md",
+            "project/governance-check.*",
+            "project/new-ticket.sh",
+            "project/ticket-011/**",
+            "pyproject.toml",
+            "scripts/**",
+            "wellmanifest_governance.py",
+            "worktree-guard.yaml"
+          ]
+        }
+      ],
+      "responsibilityChanges": false,
+      "interfaceChanges": [],
+      "dataChanges": [],
+      "ui": {
+        "impact": "none",
+        "states": [],
+        "evidence": []
+      },
+      "rollback": "git revert to restore prior governance tooling"
+    },
+    "runtimeDependencies": [],
+    "validation": [
+      {
+        "criterion": "AC-01",
+        "commands": [
+          "bash project/governance-check.sh --base 6fa11126924e29248a0b5e5b8c205c49cbc2af44 --head HEAD"
+        ],
+        "evidence": "Governance check passes cleanly with 0 errors."
+      }
+    ]
+  }
+}
